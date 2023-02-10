@@ -4,6 +4,7 @@ from discord.ext import commands
 from config import *
 #from customhelp import CustomHelpCommand
 
+#main
 if __name__ == "__main__":
     #initializing bot
     econ_bot = commands.Bot(command_prefix="!",help_command=None,intents=discord.Intents.all())
