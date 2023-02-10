@@ -1,4 +1,6 @@
 import discord
+import json
+from support import *
 from discord.ext import commands
 
 class Help(commands.Cog):
@@ -28,6 +30,35 @@ class Help(commands.Cog):
     async def ping(self,ctx):
         ms = round(self.bot.latency*1000)
         await ctx.send(f"Pong! :ping_pong: {ms} ms.")
+
+    @commands.command(aliases=["lb"])
+    async def leaderboard(self, ctx, x=5):
+        users = read()
+        leaderboard = {}
+        rank=[]
+        
+        for user in users:
+            name = int(user)
+            balance = users[str(user)]["Balance"]
+            leaderboard[balance] = name
+            rank.append(balance)
+            
+        rank = sorted(rank,reverse=True)
+
+        embed = discord.Embed(title = f':money_mouth: Top {x} Richest People :money_mouth:',description = 'decided by the balance of each person',colour=discord.Colour.gold())
+    
+        i = 1
+        for amount in rank:
+            id_ = leaderboard[amount]
+            member = self.bot.get_user(id_)
+            embed.add_field(name = f'{i}: {member.name}', value = f'${amount}', inline=False)
+            
+            if i == x:
+                break
+            else:
+                i += 1
+            
+        await ctx.send(embed = embed)
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
