@@ -18,6 +18,7 @@ class Help(commands.Cog):
         embed.set_author(name="Economy Bot")
         embed.add_field(name="Ping :ping_pong:",value="Sends a pong message and the bot's ping.",inline=False)
         embed.add_field(name="Blackjack :black_joker:",value="Play blackjack against the bot!",inline=False)
+        embed.add_field(name="Leaderboard :crown:",value="Check the top 5 richest people!",inline=False)
         embed.add_field(name="Balance :dollar:",value="Check your wallet!",inline=False)
         embed.add_field(name="Beg :coin:",value="Beg for money at Toronto!",inline=False)
         embed.add_field(name="Rob :ninja:",value="Rob to get a chance of money!",inline=False)
