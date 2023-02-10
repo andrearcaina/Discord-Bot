@@ -22,7 +22,6 @@ class Economy(commands.Cog):
             member = member
 
         if str(member.id) not in user_eco:
-
             user_eco[str(member.id)] = {}
             user_eco[str(member.id)]["Balance"] = 100
 
@@ -33,13 +32,54 @@ class Economy(commands.Cog):
         embed.set_footer(text="Want to increase balance? go gamble or beg FOOL!",icon_url=None)
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["give","grant"])
+    async def send(self,ctx,member:discord.Member,amount = None):
+        user_eco = read()
+        
+        if str(ctx.author.id) not in user_eco:
+            user_eco[str(ctx.author.id)] = {}
+            user_eco[str(ctx.author.id)]["Balance"] = 100
+
+            write(user_eco)
+
+        if str(member.id) not in user_eco:
+            user_eco[str(member.id)] = {}
+            user_eco[str(member.id)]["Balance"] = 100
+
+            write(user_eco)
+
+        if ctx.author.id == member.id:
+            await ctx.send("You can't send yourself money!")
+            return 
+
+        if amount is None:
+            await ctx.send("Please enter an amount to send.")
+            return 
+
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+        amount = int(amount)
+
+        if amount>cur_bal:
+            await ctx.send("You don't have that much money!")
+            return
+        if amount<0:
+            await ctx.send("Amount must be positive!")
+            return
+        
+        user_eco[str(ctx.author.id)]["Balance"] -= amount
+        user_eco[str(member.id)]["Balance"] += amount
+
+        write(user_eco)
+
+        member = str(member)[:-5]
+        await ctx.send(f"You have given {amount} dollars to {member}!")
+
     @commands.cooldown(1,3600,commands.BucketType.user)
     @commands.command(aliases=["Beg"])
     async def beg(self,ctx):
         user_eco = read()
 
         if str(ctx.author.id) not in user_eco:
-
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
 

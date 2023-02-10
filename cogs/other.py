@@ -1,5 +1,4 @@
 import discord
-import json
 from support import *
 from discord.ext import commands
 
@@ -16,13 +15,14 @@ class Help(commands.Cog):
         embed = discord.Embed(title="Need Any Help?",description="All commands for the bot ↓↓↓",color=discord.Colour.random())
 
         embed.set_author(name="Economy Bot")
-        embed.add_field(name="Ping :ping_pong:",value="Sends a pong message and the bot's ping.",inline=False)
+        embed.add_field(name="Leaderboard :crown:",value="Check the top 5 richest people!",inline=True)
+        embed.add_field(name="Ping :ping_pong:",value="Sends a pong message and the bot's ping.",inline=True)
         embed.add_field(name="Blackjack :black_joker:",value="Play blackjack against the bot!",inline=False)
-        embed.add_field(name="Leaderboard :crown:",value="Check the top 5 richest people!",inline=False)
-        embed.add_field(name="Balance :dollar:",value="Check your wallet!",inline=False)
-        embed.add_field(name="Beg :coin:",value="Beg for money at Toronto!",inline=False)
-        embed.add_field(name="Rob :ninja:",value="Rob to get a chance of money!",inline=False)
-        embed.add_field(name="Work :briefcase:",value="Work for 8 hours and get paid minimum wage!",inline=False)
+        embed.add_field(name="Balance :dollar:",value="Check your wallet!",inline=True)
+        embed.add_field(name="Send :moneybag:",value="Give money to other members!",inline=True)
+        embed.add_field(name="Beg :coin:",value="Beg for money at Toronto!",inline=True)
+        embed.add_field(name="Rob :ninja:",value="Rob to get a chance of money!",inline=True)
+        embed.add_field(name="Work :briefcase:",value="Work for 8 hours and get paid minimum wage!",inline=True)
         embed.set_footer(text=f'Requested by <@{ctx.author}>.',icon_url=ctx.author.avatar)
 
         await ctx.send(embed=embed)
