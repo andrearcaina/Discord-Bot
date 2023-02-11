@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from support import *
+from games import *
 from random import randint
 
 class Gamble(commands.Cog):
@@ -10,6 +11,44 @@ class Gamble(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('casino commands are ready for use')
+
+    @commands.command(aliases=["cf"])
+    async def coinflip(self,ctx,amount=None,choice="heads"):
+        user_eco = read()
+
+        if str(ctx.author.id) not in user_eco:
+            user_eco[str(ctx.author.id)] = {}
+            user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
+
+            write(user_eco)
+
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+
+        choice = choice.lower()
+        
+        numb = randint(1,2)
+
+        if amount == "all" and cur_bal > 0:
+            user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
+            await play_cf(ctx,choice,numb,cur_bal,user_eco)
+            return
+            
+        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
+            await ctx.send("Please enter an amount to send.")
+            return 
+
+        amount = int(amount)
+        user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
+
+        if amount>cur_bal:
+            await ctx.send("You don't have that much money!")
+            return
+        if amount<0:
+            await ctx.send("Amount must be positive!")
+            return
+        
+        await play_cf(ctx,choice,numb,amount,user_eco)
 
     @commands.command(aliases=["slot"])
     async def slots(self,ctx,amount=None):
@@ -22,12 +61,19 @@ class Gamble(commands.Cog):
 
             write(user_eco)
 
-        if amount is None:
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+
+        if amount == "all" and cur_bal > 0:
+            user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
+            await play_slots(ctx,cur_bal,user_eco)
+            return
+            
+        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
             await ctx.send("Please enter an amount to send.")
             return 
 
-        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = int(amount)
+        user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
 
         if amount>cur_bal:
             await ctx.send("You don't have that much money!")
@@ -35,69 +81,8 @@ class Gamble(commands.Cog):
         if amount<0:
             await ctx.send("Amount must be positive!")
             return
-        
-        # actual game
-        slots = ["banana",
-                 "apple",
-                 "moneybag",
-                 "dollar",
-                 "ping_pong",
-                 "crown",
-                 "spy",
-                ]
 
-        slot1 = slots[randint(0,6)]
-        slot2 = slots[randint(0,6)]
-        slot3 = slots[randint(0,6)]
-        slot4 = slots[randint(0,6)]
-        slot5 = slots[randint(0,6)]
-        slot6 = slots[randint(0,6)]
-        slot7 = slots[randint(0,6)]
-        slot8 = slots[randint(0,6)]
-        slot9 = slots[randint(0,6)]
-
-        print(slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9)
-
-        slotOutput1 = '| :{}: | :{}: | :{}: |\n'.format(slot1,slot2,slot3)
-        slotOutput2 = '| :{}: | :{}: | :{}: |\n'.format(slot4,slot5,slot6)
-        slotOutput3 = '| :{}: | :{}: | :{}: |\n'.format(slot7,slot8,slot9)
-
-        slot = ''.join([slotOutput1,slotOutput2,slotOutput3])
-
-        pot = discord.Embed(title = "Slots Machine", color = discord.Colour.gold())
-        pot.add_field(name = "{}\nJACKPOT".format(slot), value = f'You won {9*amount} dollars! :moneybag:',inline=False)
-
-        won = discord.Embed(title = "Slots Machine", color = discord.Colour.green())
-        won.add_field(name = "{}\nWon".format(slot), value = f'You won {3*amount} dollars! :dollar:',inline=False)
-        
-        mid = discord.Embed(title = "Slots Machine", color = discord.Colour.green())
-        mid.add_field(name = "{}\nWon".format(slot), value = f'You won {2*amount} dollars! :coin:',inline=False)
-
-        lost = discord.Embed(title = "Slots Machine", color = discord.Colour.red())
-        lost.add_field(name = "{}\nLost".format(slot), value = f'You lost {1*amount} dollars. L bozo.',inline=False)
-
-        if (slot1 == slot2 == slot3) and (slot4 == slot5 == slot6) and (slot7 == slot8 == slot9) or (slot1==slot2==slot3==slot4==slot5==slot6==slot7==slot8==slot9):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*9
-            await ctx.send(embed = pot)
-            return
-        
-        elif (slot1 == slot2 == slot3) or (slot4 == slot5 == slot6) or (slot7 == slot8 == slot9) or (slot1 == slot4 == slot7) or (slot2 == slot5 == slot8) or (slot3 == slot6 == slot9) or (slot1 == slot5 == slot9) or (slot3 == slot5 == slot7):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*3
-            write(user_eco)
-            await ctx.send(embed = won)
-            return
-
-        elif (slot1 == slot2) or (slot2 == slot3) or (slot4 == slot5) or (slot5 == slot6) or (slot7 == slot8) or (slot8 == slot9) or (slot1 == slot4) or (slot4 == slot7) or (slot2 == slot5) or (slot5 == slot8) or (slot3 == slot6) or (slot6 == slot9): 
-            user_eco[str(ctx.author.id)]["Balance"] += amount*2
-            write(user_eco)
-            await ctx.send(embed = mid)
-            return
-
-        else:
-            user_eco[str(ctx.author.id)]["Balance"] -= amount
-            write(user_eco)
-            await ctx.send(embed = lost)
-            return
+        await play_slots(ctx,amount,user_eco)
 
     @commands.command()
     async def blackjack(self,ctx,member:discord.Member = None):

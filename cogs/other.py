@@ -15,11 +15,18 @@ class Help(commands.Cog):
         embed = discord.Embed(title="Need Any Help?",description="All commands for the bot ↓↓↓",color=discord.Colour.random())
 
         embed.set_author(name="Economy Bot Commands!",icon_url=ctx.guild.icon.url)
+
+        #regular commands
         embed.add_field(name="Leaderboard :crown:",value="Check the top 5 richest people!",inline=True)
         embed.add_field(name="Ping :ping_pong:",value="Sends a pong message!",inline=True)
-        embed.add_field(name="Casino Commands!",value="Gambling your money away!",inline=False)
+        
+        #casino commands
+        embed.add_field(name="Casino Commands!",value="Gamble money!",inline=False)
         embed.add_field(name="Slots :t_rex:",value="Play slots for a chance to more money!",inline=True)
-        embed.add_field(name="Blackjack :black_joker:",value="Play blackjack against the bot!",inline=True)
+        embed.add_field(name="Coinflip :dolphin:",value="Flip a coin for a chance to get double your bet!",inline=True)
+        embed.add_field(name="Blackjack :black_joker:",value="Play blackjack against the bot! W.I.P",inline=True)
+        
+        #economy commands
         embed.add_field(name="Economy Commands!",value="Get money!",inline=False)
         embed.add_field(name="Balance :dollar:",value="Check your wallet!",inline=True)
         embed.add_field(name="Deposit :dollar:",value="Deposit money to your vault!",inline=True)

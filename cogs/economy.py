@@ -56,11 +56,26 @@ class Economy(commands.Cog):
             await ctx.send("You can't send yourself money!")
             return 
 
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+
+        if amount == "all" and cur_bal > 0:
+            user_eco[str(ctx.author.id)]["Balance"] -= cur_bal
+            user_eco[str(member.id)]["Balance"] += cur_bal
+
+            write(user_eco)
+
+            member = str(member)[:-5]
+            await ctx.send(f"You have given {cur_bal} dollars to {member}!")
+            return
+            
+        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
+            await ctx.send("Please enter an amount to send.")
+            return 
+
         if amount is None:
             await ctx.send("Please enter an amount to send.")
             return 
 
-        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = int(amount)
 
         if amount>cur_bal:
@@ -93,11 +108,24 @@ class Economy(commands.Cog):
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = randint(-50,100)
         new_bal = cur_bal + amount
-        print("current bal",cur_bal)
-        print("amount given/taken",amount)
-        print("new bal",new_bal)
         
-        if new_bal < cur_bal:
+        if cur_bal == 0:
+            embed = discord.Embed(title="pedestrians and even the yakuza scoff at you.",description=f"You're dirt poor. stop trying",color=discord.Colour.red())
+            await ctx.send(embed=embed)
+
+        if 20 <= cur_bal <= 50:
+            gang = ":ninja:"*3
+            embed = discord.Embed(title="Oh no! you've been robbed!",description=f"A group of robbers saw an opportunity, and well, boom! {gang} UNLUCKY",color=discord.Colour.red())
+            embed.add_field(name="Money lost:",value=f"${abs(cur_bal)}",inline=False)
+            embed.add_field(name="New Balance:",value="$0",inline=False)
+            embed.set_footer(text="next time don't go to the yakuza for money",icon_url=None)
+            await ctx.send(embed=embed)
+
+            user_eco[str(ctx.author.id)]["Balance"] = 0
+
+            write(user_eco)
+
+        if cur_bal > 50 and new_bal < cur_bal:
             gang = ":ninja:"*3
             embed = discord.Embed(title="Oh no! you've been robbed!",description=f"A group of robbers saw an opportunity, and well, boom! {gang} UNLUCKY",color=discord.Colour.red())
             embed.add_field(name="Money lost:",value=f"${abs(amount)}",inline=False)
@@ -110,22 +138,9 @@ class Economy(commands.Cog):
 
             write(user_eco)
 
-        elif new_bal > cur_bal:
+        elif cur_bal > 50 and new_bal > cur_bal:
             money = ":money_with_wings:"*5
-            embed = discord.Embed(title="Moneymonahmonaynonoymaoynoya!",description=money,color=discord.Colour.green())
-            embed.add_field(name="Money gained:",value=f"${abs(amount)}",inline=False)
-            embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-            embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
-            
-            await ctx.send(embed=embed)
-
-            user_eco[str(ctx.author.id)]["Balance"] += amount
-
-            write(user_eco)
-
-        elif new_bal == cur_bal+100:
-            money = ":coin:"*5
-            embed = discord.Embed(title="JACKPOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT!",description=money,color=discord.Colour.gold())
+            embed = discord.Embed(title="Some kind souls are kind to a nobody like you!",description=money,color=discord.Colour.green())
             embed.add_field(name="Money gained:",value=f"${abs(amount)}",inline=False)
             embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
             embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
@@ -183,15 +198,14 @@ class Economy(commands.Cog):
             return
         
         stolen = randint(0,cur_bal)
-        
-        member = str(member)[:-5]
-
-        await ctx.send(f"You stole ${stolen} from {member}!")
-
+    
         user_eco[str(ctx.author.id)]["Balance"] += stolen
         user_eco[str(member.id)]["Balance"] -= stolen
 
         write(user_eco)
+
+        member = str(member)[:-5]
+        await ctx.send(f"You stole ${stolen} from {member}!")
 
 
     @commands.cooldown(1,600,commands.BucketType.user)
@@ -210,7 +224,11 @@ class Economy(commands.Cog):
         amount = randint(200,3000)
         chance = randint(1,20)
 
-        if chance <= 15: #75% chance
+        if cur_bal<=100:
+            await ctx.send("Not worth risking your money!")
+            return
+
+        if cur_bal > 100 and chance <= 15: #75% chance
             new_bal = cur_bal - 500
             embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
             embed.add_field(name="Money lost:",value="$500",inline=False)
@@ -246,11 +264,21 @@ class Economy(commands.Cog):
 
             write(user_eco)
 
-        if amount is None:
+        cur_bal = user_eco[str(ctx.author.id)]["Vault"] 
+
+        if amount == "all" and cur_bal > 0:
+            user_eco[str(ctx.author.id)]["Balance"] += cur_bal
+            user_eco[str(ctx.author.id)]["Vault"] -= cur_bal
+
+            write(user_eco)
+
+            await ctx.send(f"You have withdrawed {cur_bal} dollars from your vault!")
+            return
+
+        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
             await ctx.send("Please enter an amount to send.")
             return 
 
-        cur_bal = user_eco[str(ctx.author.id)]["Vault"]
         amount = int(amount)
 
         if amount>cur_bal:
@@ -271,6 +299,8 @@ class Economy(commands.Cog):
     async def deposit(self,ctx,amount=None):
         user_eco = read()
         
+        choice = "all"
+
         if str(ctx.author.id) not in user_eco:
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
@@ -278,11 +308,21 @@ class Economy(commands.Cog):
 
             write(user_eco)
 
-        if amount is None:
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+
+        if amount == "all" and cur_bal > 0:
+            user_eco[str(ctx.author.id)]["Balance"] -= cur_bal
+            user_eco[str(ctx.author.id)]["Vault"] += cur_bal
+
+            write(user_eco)
+
+            await ctx.send(f"You have deposited {cur_bal} dollars to your vault!")
+            return
+        
+        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
             await ctx.send("Please enter an amount to send.")
             return 
 
-        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = int(amount)
 
         if amount>cur_bal:
