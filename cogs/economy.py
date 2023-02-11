@@ -11,7 +11,7 @@ class Economy(commands.Cog):
     async def on_ready(self):
         print('economy commands are ready for use')
 
-    @commands.command(aliases=["bal","b","Balance","Bal"])
+    @commands.command(aliases=["bal","b","Balance","Bal","Vault","vault"])
     async def balance(self,ctx,member: discord.Member=None):
         # puts balance data into a json file for use (and automates it)
         user_eco = read()
@@ -24,11 +24,13 @@ class Economy(commands.Cog):
         if str(member.id) not in user_eco:
             user_eco[str(member.id)] = {}
             user_eco[str(member.id)]["Balance"] = 100
+            user_eco[str(member.id)]["Vault"] = 0
 
             write(user_eco)
 
         embed = discord.Embed(title=f"{member.name}'s Current Balance",color=discord.Colour.green())
-        embed.add_field(name="Balance:",value=f"${user_eco[str(member.id)]['Balance']}")
+        embed.add_field(name="Balance:",value=f"${user_eco[str(member.id)]['Balance']}",inline=True)
+        embed.add_field(name="Vault:",value=f"${user_eco[str(member.id)]['Vault']}",inline=True)
         embed.set_footer(text="Want to increase balance? go gamble or beg FOOL!",icon_url=None)
         await ctx.send(embed=embed)
 
@@ -39,12 +41,14 @@ class Economy(commands.Cog):
         if str(ctx.author.id) not in user_eco:
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
 
             write(user_eco)
 
         if str(member.id) not in user_eco:
             user_eco[str(member.id)] = {}
             user_eco[str(member.id)]["Balance"] = 100
+            user_eco[str(member.id)]["Vault"] = 0
 
             write(user_eco)
 
@@ -82,6 +86,7 @@ class Economy(commands.Cog):
         if str(ctx.author.id) not in user_eco:
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
 
             write(user_eco)
 
@@ -144,6 +149,7 @@ class Economy(commands.Cog):
         if str(ctx.author.id) not in user_eco:
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
 
             write(user_eco)
         
@@ -159,6 +165,35 @@ class Economy(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.cooldown(1,3600,commands.BucketType.user)
+    @commands.command(aliases=["s","st"])
+    async def steal(self,ctx,member:discord.Member):
+        user_eco = read()
+        
+        if str(ctx.author.id) not in user_eco:
+            user_eco[str(ctx.author.id)] = {}
+            user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
+
+            write(user_eco)
+
+        cur_bal = user_eco[str(member.id)]["Balance"]
+        if cur_bal<100:
+            await ctx.send("It's not worth getting that!")
+            return
+        
+        stolen = randint(0,cur_bal)
+        
+        member = str(member)[:-5]
+
+        await ctx.send(f"You stole ${stolen} from {member}!")
+
+        user_eco[str(ctx.author.id)]["Balance"] += stolen
+        user_eco[str(member.id)]["Balance"] -= stolen
+
+        write(user_eco)
+
+
     @commands.cooldown(1,600,commands.BucketType.user)
     @commands.command(aliases=["r","Rob"])
     async def rob(self,ctx):
@@ -167,14 +202,15 @@ class Economy(commands.Cog):
         if str(ctx.author.id) not in user_eco:
             user_eco[str(ctx.author.id)] = {}
             user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
 
             write(user_eco)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = randint(200,3000)
-        chance = randint(1,10)
+        chance = randint(1,20)
 
-        if chance <= 8:
+        if chance <= 15: #75% chance
             new_bal = cur_bal - 500
             embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
             embed.add_field(name="Money lost:",value="$500",inline=False)
@@ -199,6 +235,69 @@ class Economy(commands.Cog):
 
             write(user_eco)
 
+    @commands.command(aliases=["wi","with","wd"])
+    async def withdraw(self,ctx,amount=None):
+        user_eco = read()
+        
+        if str(ctx.author.id) not in user_eco:
+            user_eco[str(ctx.author.id)] = {}
+            user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
+
+            write(user_eco)
+
+        if amount is None:
+            await ctx.send("Please enter an amount to send.")
+            return 
+
+        cur_bal = user_eco[str(ctx.author.id)]["Vault"]
+        amount = int(amount)
+
+        if amount>cur_bal:
+            await ctx.send("You don't have that much money!")
+            return
+        if amount<0:
+            await ctx.send("Amount must be positive!")
+            return
+        
+        user_eco[str(ctx.author.id)]["Balance"] += amount
+        user_eco[str(ctx.author.id)]["Vault"] -= amount
+
+        write(user_eco)
+
+        await ctx.send(f"You have withdrawed {amount} dollars from your vault!")
+    
+    @commands.command(aliases=["d","de","dep"])
+    async def deposit(self,ctx,amount=None):
+        user_eco = read()
+        
+        if str(ctx.author.id) not in user_eco:
+            user_eco[str(ctx.author.id)] = {}
+            user_eco[str(ctx.author.id)]["Balance"] = 100
+            user_eco[str(ctx.author.id)]["Vault"] = 0
+
+            write(user_eco)
+
+        if amount is None:
+            await ctx.send("Please enter an amount to send.")
+            return 
+
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+        amount = int(amount)
+
+        if amount>cur_bal:
+            await ctx.send("You don't have that much money!")
+            return
+        if amount<0:
+            await ctx.send("Amount must be positive!")
+            return
+        
+        user_eco[str(ctx.author.id)]["Balance"] -= amount
+        user_eco[str(ctx.author.id)]["Vault"] += amount
+
+        write(user_eco)
+
+        await ctx.send(f"You have deposited {amount} dollars to your vault!")
 
 async def setup(bot):
     await bot.add_cog(Economy(bot))
