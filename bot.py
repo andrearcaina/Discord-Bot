@@ -9,7 +9,7 @@ def run_bot(TOKEN,econ_bot):
     async def on_guild_join(guild):
         for channel in guild.text_channels:
             if channel.permissions_for(guild.me).send_messages:
-                await channel.send('Economy bot is here to steal your money! :dollar:')
+                await channel.send('Economy bot is here to steal your money! !help :dollar:')
             break
 
     @econ_bot.event
@@ -26,7 +26,13 @@ def run_bot(TOKEN,econ_bot):
             
             user_message = str(message.content).lower()
 
-            if '!' not in user_message: 
+            if '!' in user_message: #for blackjack
+                if user_message in ['!join','!leave','!hit','!stand']:
+                    await message.delete()
+                else:
+                    await econ_bot.process_commands(message)
+
+            elif '!' not in user_message: 
                 for i in range(len(['map','where','idiot','bozo'])):
                     if ['map','where','idiot','bozo'][i] in user_message:
                         with open('map.png', 'rb') as f:
@@ -36,6 +42,7 @@ def run_bot(TOKEN,econ_bot):
                 else:
                     rsp = respond(user_message,message.author)
                     await message.reply(rsp)
+                    
             else:
                 await econ_bot.process_commands(message)
         except:

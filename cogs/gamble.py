@@ -14,14 +14,7 @@ class Gamble(commands.Cog):
 
     @commands.command(aliases=["cf"])
     async def coinflip(self,ctx,amount=None,choice="heads"):
-        user_eco = read()
-
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
 
@@ -52,14 +45,7 @@ class Gamble(commands.Cog):
 
     @commands.command(aliases=["slot"])
     async def slots(self,ctx,amount=None):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
 
@@ -86,16 +72,7 @@ class Gamble(commands.Cog):
 
     @commands.command()
     async def blackjack(self,ctx,member:discord.Member = None):
-        
-        user_eco = read()
-
-        if str(ctx.author.id) not in user_eco:
-
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
 

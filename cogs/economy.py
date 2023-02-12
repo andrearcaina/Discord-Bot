@@ -14,19 +14,13 @@ class Economy(commands.Cog):
     @commands.command(aliases=["bal","b","Balance","Bal","Vault","vault"])
     async def balance(self,ctx,member: discord.Member=None):
         # puts balance data into a json file for use (and automates it)
-        user_eco = read()
-
+        
         if member is None:
             member = ctx.author
         elif member is not None:
             member = member
 
-        if str(member.id) not in user_eco:
-            user_eco[str(member.id)] = {}
-            user_eco[str(member.id)]["Balance"] = 100
-            user_eco[str(member.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(member.id)
 
         embed = discord.Embed(title=f"{member.name}'s Current Balance",color=discord.Colour.green())
         embed.add_field(name="Balance:",value=f"${user_eco[str(member.id)]['Balance']}",inline=True)
@@ -36,21 +30,8 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["give","grant"])
     async def send(self,ctx,member:discord.Member,amount = None):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
-
-        if str(member.id) not in user_eco:
-            user_eco[str(member.id)] = {}
-            user_eco[str(member.id)]["Balance"] = 100
-            user_eco[str(member.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
+        user_eco = open_account(member.id)
 
         if ctx.author.id == member.id:
             await ctx.send("You can't send yourself money!")
@@ -96,14 +77,7 @@ class Economy(commands.Cog):
     @commands.cooldown(1,3600,commands.BucketType.user)
     @commands.command(aliases=["Beg"])
     async def beg(self,ctx):
-        user_eco = read()
-
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = randint(-50,100)
@@ -159,14 +133,7 @@ class Economy(commands.Cog):
     @commands.cooldown(1,3600,commands.BucketType.user)       
     @commands.command(aliases=["w","Work"])
     async def work(self,ctx):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
         
         amount = randint(100,200)
         user_eco[str(ctx.author.id)]["Balance"] += amount
@@ -183,14 +150,7 @@ class Economy(commands.Cog):
     @commands.cooldown(1,3600,commands.BucketType.user)
     @commands.command(aliases=["s","st"])
     async def steal(self,ctx,member:discord.Member):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(member.id)]["Balance"]
         if cur_bal<100:
@@ -211,14 +171,7 @@ class Economy(commands.Cog):
     @commands.cooldown(1,600,commands.BucketType.user)
     @commands.command(aliases=["r","Rob"])
     async def rob(self,ctx):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         amount = randint(200,3000)
@@ -255,14 +208,7 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["wi","with","wd"])
     async def withdraw(self,ctx,amount=None):
-        user_eco = read()
-        
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Vault"] 
 
@@ -297,16 +243,7 @@ class Economy(commands.Cog):
     
     @commands.command(aliases=["d","de","dep"])
     async def deposit(self,ctx,amount=None):
-        user_eco = read()
-        
-        choice = "all"
-
-        if str(ctx.author.id) not in user_eco:
-            user_eco[str(ctx.author.id)] = {}
-            user_eco[str(ctx.author.id)]["Balance"] = 100
-            user_eco[str(ctx.author.id)]["Vault"] = 0
-
-            write(user_eco)
+        user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
 
