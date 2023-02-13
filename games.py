@@ -202,7 +202,7 @@ async def play_race(ctx,racer,amount,user_eco):
         await message.edit(embed=embed)
         print("trex")
         
-        if racer == "dino":
+        if racer == "trex":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
             write(user_eco)
             embed.description = f'{the_race}\n\n🦖 **Won!**\n\nYou gained: ${amount*10}!'

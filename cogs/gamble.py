@@ -79,7 +79,7 @@ class Gamble(commands.Cog):
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
 
         if choice is None:
-            embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, dino, snail, tiger) to bet on.",color=discord.Colour.random())
+            embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, trex, snail, tiger) to bet on.",color=discord.Colour.random())
             embed.set_footer(text=f"'!race [animal] [amount] to play.",icon_url=ctx.author.avatar)
             await ctx.send(embed=embed)
             return
@@ -96,7 +96,6 @@ class Gamble(commands.Cog):
 
             amount = int(amount)
             user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
-            write(user_eco)
 
             if amount>cur_bal:
                 await ctx.send("You don't have that much money!")
@@ -105,6 +104,7 @@ class Gamble(commands.Cog):
                 await ctx.send("Amount must be positive!")
                 return
 
+            write(user_eco)
             await play_race(ctx,choice,amount,user_eco)
 
     @commands.command()

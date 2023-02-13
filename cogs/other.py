@@ -1,9 +1,6 @@
 import discord
 from support import *
 from discord.ext import commands
-from random import choice
-import asyncio
-import time
 
 class Help(commands.Cog):
     def __init__(self,bot):
