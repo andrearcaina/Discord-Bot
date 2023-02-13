@@ -12,6 +12,7 @@ class Gamble(commands.Cog):
     async def on_ready(self):
         print('casino commands are ready for use')
 
+    @commands.cooldown(1,2,commands.BucketType.user)
     @commands.command(aliases=["cf"])
     async def coinflip(self,ctx,amount=None,choice="heads"):
         user_eco = open_account(ctx.author.id)
@@ -43,6 +44,7 @@ class Gamble(commands.Cog):
         
         await play_cf(ctx,choice,numb,amount,user_eco)
 
+    @commands.cooldown(1,2,commands.BucketType.user)
     @commands.command(aliases=["slot"])
     async def slots(self,ctx,amount=None):
         user_eco = open_account(ctx.author.id)
@@ -69,6 +71,41 @@ class Gamble(commands.Cog):
             return
 
         await play_slots(ctx,amount,user_eco)
+
+    @commands.command(aliases=["horserace","animalrace"])
+    async def race(self,ctx,choice=None,amount=None):
+        user_eco = open_account(ctx.author.id)
+
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+
+        if choice is None:
+            embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, dino, snail, tiger) to bet on.",color=discord.Colour.random())
+            embed.set_footer(text=f"'!race [animal] [amount] to play.",icon_url=ctx.author.avatar)
+            await ctx.send(embed=embed)
+            return
+
+        else:
+            if amount == "all" and cur_bal > 0:
+                user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
+                write(user_eco)
+                await play_race(ctx,choice,cur_bal,user_eco)
+                
+            if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
+                await ctx.send("Please enter an amount to send.")
+                return 
+
+            amount = int(amount)
+            user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
+            write(user_eco)
+
+            if amount>cur_bal:
+                await ctx.send("You don't have that much money!")
+                return
+            if amount<0:
+                await ctx.send("Amount must be positive!")
+                return
+
+            await play_race(ctx,choice,amount,user_eco)
 
     @commands.command()
     async def blackjack(self,ctx,member:discord.Member = None):

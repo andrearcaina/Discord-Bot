@@ -1,6 +1,8 @@
 from support import *
-from random import randint
+from random import randint, choice
 import discord
+import asyncio,time
+
 
 async def play_cf(ctx,choice,numb,amount,user_eco):
     if (choice == "tails" and numb == 1) or (choice == "heads" and numb == 2):
@@ -29,18 +31,38 @@ async def play_slots(ctx,amount,user_eco):
              "yen",
              "ghost",
              "flag_us",
-             "game_die"
+             "game_die",
+             "playground_slide",
+             "airplane",
+             "placard",
+             "bison",
+             "coffee",
+             "giraffe",
+             "children_crossing",
+             "coffin",
+             "womans_hat",
+             "billed_cap",
+             "bell_pepper",
+             "mermaid",
+             "dragon",
+             "four_leaf_clover",
+             "beer",
+             "clinking_glass",
+             "wine_glass",
+             "basketball",
+             "drum",
+             "jigsaw",
             ]
 
-    slot1 = slots[randint(0,14)]
-    slot2 = slots[randint(0,14)]
-    slot3 = slots[randint(0,14)]
-    slot4 = slots[randint(0,14)]
-    slot5 = slots[randint(0,14)]
-    slot6 = slots[randint(0,14)]
-    slot7 = slots[randint(0,14)]
-    slot8 = slots[randint(0,14)]
-    slot9 = slots[randint(0,14)]
+    slot1 = slots[randint(0,30)]
+    slot2 = slots[randint(0,30)]
+    slot3 = slots[randint(0,30)]
+    slot4 = slots[randint(0,30)]
+    slot5 = slots[randint(0,30)]
+    slot6 = slots[randint(0,30)]
+    slot7 = slots[randint(0,30)]
+    slot8 = slots[randint(0,30)]
+    slot9 = slots[randint(0,30)]
 
     print(slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9)
 
@@ -91,3 +113,131 @@ async def play_slots(ctx,amount,user_eco):
         write(user_eco)
         await ctx.send(embed = lost)
         return
+
+async def play_race(ctx,racer,amount,user_eco):
+    '''
+    main idea
+
+    🐎 - horse :racehorse
+    🐉 - dragon :dragon:
+    🦖 - t rex :t_rex:
+    🐌 - snail :snail:
+    🐅 - tiger :tiger2:
+
+    user must bet on one of them
+
+    whoever makes the finish line (right to left cuz they facing left) <- gave up and did left to right
+    
+    the race is bet on rng basically
+    
+
+    FOR LATER, DON'T HAVE TO DO THIS YET
+    if user does !cheat (easter egg command), 
+    the choice the user bet on will run faster (by 2 spaces, instead of 1)
+    implement this later
+
+    '''
+    
+    racer = racer.lower()
+
+    race = ''.join(['🐎\n', '🐉\n', '🦖\n', '🐌\n', '🐅\n'])
+    embed = discord.Embed(title="STARTING RACE IN 3",description=f"{race}",color=discord.Colour.dark_gray()) 
+    message = await ctx.send(embed=embed)
+    
+    for x in range(3,-1,-1):
+        embed.title = f'STARTING RACE IN {x}'
+        await message.edit(embed=embed)
+        await asyncio.sleep(1)
+
+    animals = ['🐎', '🐉', '🦖', '🐌', '🐅']
+
+    embed.title = "OFF THEY GO!"
+    while max(len(animal) for animal in animals) <= 10:
+        select = choice(range(len(animals)))
+        animals[select] = '=' + animals[select]
+        the_race = "\n".join(animals)
+        embed.description = f'{the_race}'
+        await message.edit(embed=embed)
+        time.sleep(0.1)
+
+    print('race done')
+    print(len(animals[0]))
+    print(len(animals[1]))
+    print(len(animals[2]))
+    print(len(animals[3]))
+    print(len(animals[4]))
+
+    if len(animals[0]) == 11:
+        embed.description = f'{the_race}\n\n🐎 **Won!**'
+        await message.edit(embed=embed)
+        print("horse")
+
+        if racer == "horse":
+            user_eco[str(ctx.author.id)]["Balance"] += amount*10
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐎 **Won!**\n\nYou gained: ${amount*10}!'
+            await message.edit(embed=embed)
+        else:
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐎 **Won!**\n\nYou lost: ${amount}!'
+            await message.edit(embed=embed)
+
+    elif len(animals[1]) == 11:
+        embed.description = f'{the_race}\n\n🐉 **Won!**'
+        await message.edit(embed=embed)
+        print("dragon")
+
+        if racer == "dragon":
+            user_eco[str(ctx.author.id)]["Balance"] += amount*10
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐉 **Won!**\n\nYou gained: ${amount*10}!'
+            await message.edit(embed=embed)
+        else:
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐉 **Won!**\n\nYou lost: ${amount}!'
+            await message.edit(embed=embed)
+
+    elif len(animals[2]) == 11:
+        embed.description = f'{the_race}\n\n🦖 **Won!**'
+        await message.edit(embed=embed)
+        print("trex")
+        
+        if racer == "dino":
+            user_eco[str(ctx.author.id)]["Balance"] += amount*10
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🦖 **Won!**\n\nYou gained: ${amount*10}!'
+            await message.edit(embed=embed)
+        else:
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🦖 **Won!**\n\nYou lost: ${amount}!'
+            await message.edit(embed=embed)
+
+    elif len(animals[3]) == 11:
+        embed.description = f'{the_race}\n\n🐌 **Won!**'
+        await message.edit(embed=embed)
+        print("snail")
+        
+        if racer == "snail":
+            user_eco[str(ctx.author.id)]["Balance"] += amount*10
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐌 **Won!**\n\nYou gained: ${amount*10}!'
+            await message.edit(embed=embed)
+        else:
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐌 **Won!**\n\nYou lost: ${amount}!'
+            await message.edit(embed=embed)
+
+    elif len(animals[4]) == 11:
+        embed.description = f'{the_race}\n\n🐅 **Won!**'
+        await message.edit(embed=embed)
+        print("tiger")
+
+        if racer == "tiger":
+            user_eco[str(ctx.author.id)]["Balance"] += amount*10
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐅 **Won!**\n\nYou gained: ${amount*10}!'
+            await message.edit(embed=embed)
+        else:
+            write(user_eco)
+            embed.description = f'{the_race}\n\n🐅 **Won!**\n\nYou lost: ${amount}!'
+            await message.edit(embed=embed)

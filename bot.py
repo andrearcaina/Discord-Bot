@@ -9,7 +9,7 @@ def run_bot(TOKEN,econ_bot):
     async def on_guild_join(guild):
         for channel in guild.text_channels:
             if channel.permissions_for(guild.me).send_messages:
-                await channel.send('Economy bot is here to steal your money! !help :dollar:')
+                await channel.send('Economy bot is here to steal your money! type !help :dollar:')
             break
 
     @econ_bot.event
@@ -38,6 +38,7 @@ def run_bot(TOKEN,econ_bot):
                         with open('map.png', 'rb') as f:
                             picture = discord.File(f)
                             await message.channel.send(file=picture)
+                            return
 
                 else:
                     rsp = respond(user_message,message.author)
@@ -51,7 +52,7 @@ def run_bot(TOKEN,econ_bot):
     @econ_bot.event
     async def on_command_error(ctx,error):
         if isinstance(error,commands.CommandOnCooldown):
-            embed = discord.Embed(title=f":warning: Cooldown :warning:",description="**Still on cooldown**, please try again in {:.2f} seconds".format(error.retry_after),color=discord.Colour.yellow())
+            embed = discord.Embed(title=f":warning: Cooldown :warning:",description="**Still on cooldown**, please try again in {:.2f} seconds <@{}>!".format(error.retry_after,ctx.author),color=discord.Colour.yellow())
             await ctx.send(embed=embed)
 
     async def load():
