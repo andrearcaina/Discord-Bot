@@ -141,8 +141,8 @@ class Gamble(commands.Cog):
             if amount>cur_bal:
                 await ctx.send("You don't have that much money!")
                 return
-            if amount<0:
-                await ctx.send("Amount must be positive!")
+            if amount<=0:
+                await ctx.send("Amount must be positive and nonzero!")
                 return
 
             write(user_eco)

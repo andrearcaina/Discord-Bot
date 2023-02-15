@@ -35,6 +35,12 @@ async def play_roll(ctx,guess,amount,user_eco):
         embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
         await message.edit(embed=embed)
         return
+    if numb == 1 and (guess == ">7" or guess == "g"):
+        write(user_eco)
+        embed.title="Game!"
+        embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get greater than 7!\nUnlucky, You lost ${amount}! L."
+        await message.edit(embed=embed)
+        return
     else:
         embed.description=f"{emoji_id[numb]} {emoji_id[0]}"
         await message.edit(embed=embed)
@@ -46,24 +52,24 @@ async def play_roll(ctx,guess,amount,user_eco):
         await message.edit(embed=embed)
 
         if (guess == "=7" or guess == "e") and (numb+numb2==7):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*4
+            user_eco[str(ctx.author.id)]["Balance"] += amount*5
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*4}!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*5}!"
             await message.edit(embed=embed)
             return
-        elif (guess == ">7" or guess == "g") and (numb+numb2>=7):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*2
+        elif (guess == ">7" or guess == "g") and (numb+numb2>7):
+            user_eco[str(ctx.author.id)]["Balance"] += amount*3
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*2}!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
-        elif (guess == "<7" or guess == "l") and (numb+numb2<=7):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*2
+        elif (guess == "<7" or guess == "l") and (numb+numb2<7):
+            user_eco[str(ctx.author.id)]["Balance"] += amount*3
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*2}!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
         else:

@@ -33,8 +33,8 @@ def run_bot(TOKEN,econ_bot):
                     await econ_bot.process_commands(message)
 
             elif '!' not in user_message: 
-                for i in range(len(['map','where','idiot','bozo'])):
-                    if ['map','where','idiot','bozo'][i] in user_message:
+                for i in range(len(['map','where','idiot','bozo','broke'])):
+                    if ['map','where','idiot','bozo','broke'][i] in user_message:
                         with open('map.png', 'rb') as f:
                             picture = discord.File(f)
                             await message.channel.send(file=picture)
