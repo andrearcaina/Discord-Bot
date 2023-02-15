@@ -76,7 +76,7 @@ class Help(commands.Cog):
 
             elif choice == "Roll" or choice == "roll" or choice == "rl":
                 embed = discord.Embed(title="Roll <a:animated_dice:1075250955077038150>",
-                                    description="Type !roll [guess] [bet_amount] or !rl [bet_amount] for a chance\nto get four times or double your bet!\nThis game is based off the dice game called Over Under 7.\n\nex: !rl <7 50\nex: !rl =7 50\nex: !rl >7 50",
+                                    description="Type !roll [guess] [bet_amount] or !rl [guess] [bet_amount]\nfor a chance to get four times or double your bet!\nThis game is based off the dice game called Over Under 7.\n\nex: !rl <7 50\nex: !rl =7 50\nex: !rl >7 50",
                                     color=discord.Colour.random())
                 embed.set_footer(text=f"you can use 'l' instead of '<7' or \n'e' instead of '=7' or \n'g' instead of '>7' for your guess.",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)

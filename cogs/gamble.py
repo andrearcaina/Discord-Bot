@@ -19,7 +19,13 @@ class Gamble(commands.Cog):
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         
-        if guess == "<7" or guess == "l" or guess == "=7" or "e" or guess == ">7" or guess == "g":
+        if guess is None:
+            await ctx.send("Please send a guess. For additional help on this game, type !help roll")
+            return
+
+        guess = str(guess)
+
+        if guess == "<7" or guess == "l" or guess == "=7" or guess == "e" or guess == ">7" or guess == "g":
             if amount == "all" and cur_bal > 0:
                 user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
                 write(user_eco)
@@ -43,7 +49,7 @@ class Gamble(commands.Cog):
             write(user_eco)
             await play_roll(ctx,guess,amount,user_eco)
         else:
-            await ctx.send("Please send a number of what the bot will roll.\nFor additional help on this game, type !help roll")
+            await ctx.send("That isn't an option!For help on this game, type !help roll.")
 
     @commands.cooldown(1,2,commands.BucketType.user)
     @commands.command(aliases=["cf","coinflip"])
