@@ -165,7 +165,6 @@ class Help(commands.Cog):
             users = read()
             leaderboard = {}
             rank = []
-            total = 0
 
             guild = self.bot.get_guild(ctx.message.guild.id)
 
@@ -175,14 +174,10 @@ class Help(commands.Cog):
                 if guild.get_member(name) is not None:
                     leaderboard[balance] = name
                     rank.append(balance)
-                    total += 1
-            
-            if total > 5:
-                total = 5
 
             rank = sorted(rank,reverse=True)
 
-            embed = discord.Embed(title = f':money_mouth: Top {total} Richest People :money_mouth:',description = 'Decided by total cash of each person.',colour=discord.Colour.gold())
+            embed = discord.Embed(title = f':money_mouth: Top 3 Richest People :money_mouth:',description = 'Decided by total cash of each person.',colour=discord.Colour.gold())
 
             i = 1
             for amount in rank:
@@ -190,7 +185,7 @@ class Help(commands.Cog):
                 member = self.bot.get_user(id_)
                 embed.add_field(name = f'{i}: {member.name}', value = f'${amount}', inline=False)
                 
-                if i == total:
+                if i == 3:
                     break
                 else:
                     i += 1

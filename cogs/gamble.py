@@ -49,7 +49,7 @@ class Gamble(commands.Cog):
             write(user_eco)
             await play_roll(ctx,guess,amount,user_eco)
         else:
-            await ctx.send("That isn't an option!For help on this game, type !help roll.")
+            await ctx.send("That isn't an option! For help on this game, type !help roll.")
 
     @commands.cooldown(1,2,commands.BucketType.user)
     @commands.command(aliases=["cf","coinflip"])
@@ -119,11 +119,13 @@ class Gamble(commands.Cog):
 
         if choice is None:
             embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, trex, snail, tiger) to bet on.",color=discord.Colour.random())
-            embed.set_footer(text=f"'!race [animal] [amount] to play.",icon_url=ctx.author.avatar)
+            embed.set_footer(text=f"'!race [animal] [amount] to play. !help race for more info.",icon_url=ctx.author.avatar)
             await ctx.send(embed=embed)
             return
 
-        else:
+        choice = str(choice)
+
+        if choice == "horse" or choice == "dragon" or choice == "trex" or choice == "snail" or choice == "tiger":
             if amount == "all" and cur_bal > 0:
                 user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
                 write(user_eco)
@@ -145,6 +147,11 @@ class Gamble(commands.Cog):
 
             write(user_eco)
             await play_race(ctx,choice,amount,user_eco)
+        else:
+            embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, trex, snail, tiger) to bet on.",color=discord.Colour.random())
+            embed.set_footer(text=f"!race [animal] [amount] to play. !help race for more info.",icon_url=ctx.author.avatar)
+            await ctx.send(embed=embed)
+            return
 
     @commands.cooldown(1,30,commands.BucketType.user)
     @commands.command(aliases=["blackjack","bj"])

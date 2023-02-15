@@ -29,7 +29,7 @@ async def play_roll(ctx,guess,amount,user_eco):
     embed.description=f"{emoji_id[numb]}"
     await message.edit(embed=embed)
 
-    if (guess == "<7" or guess == "l") and numb == "6":
+    if numb == 6 and (guess == "<7" or guess == "l"):
         write(user_eco)
         embed.title="Game!"
         embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
