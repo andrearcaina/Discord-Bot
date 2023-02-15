@@ -13,6 +13,39 @@ class Gamble(commands.Cog):
         print('casino commands are ready for use')
 
     @commands.cooldown(1,2,commands.BucketType.user)
+    @commands.command(aliases=["Roll", "rl"])
+    async def roll(self,ctx,guess=None,amount=None):
+        user_eco = open_account(ctx.author.id)
+
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+        
+        if guess == "<7" or guess == "l" or guess == "=7" or "e" or guess == ">7" or guess == "g":
+            if amount == "all" and cur_bal > 0:
+                user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
+                write(user_eco)
+                await play_roll(ctx,guess,cur_bal,user_eco)
+                return
+                
+            if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
+                await ctx.send("Please enter an amount to send.")
+                return 
+
+            amount = int(amount)
+            user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
+
+            if amount>cur_bal:
+                await ctx.send("You don't have that much money!")
+                return
+            if amount<0:
+                await ctx.send("Amount must be positive!")
+                return
+            
+            write(user_eco)
+            await play_roll(ctx,guess,amount,user_eco)
+        else:
+            await ctx.send("Please send a number of what the bot will roll.\nFor additional help on this game, type !help roll")
+
+    @commands.cooldown(1,2,commands.BucketType.user)
     @commands.command(aliases=["cf","coinflip"])
     async def Coinflip(self,ctx,amount=None,choice="heads"):
         user_eco = open_account(ctx.author.id)

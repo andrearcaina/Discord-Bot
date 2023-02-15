@@ -54,7 +54,6 @@ class Help(commands.Cog):
                         await msg.remove_reaction(reaction, user)
 
                 except asyncio.TimeoutError:
-                    await msg.delete()
                     break
 
         else: #if it is not None basically
@@ -65,14 +64,21 @@ class Help(commands.Cog):
                 embed = discord.Embed(title="Ping :ping_pong:",
                                     description="Type !ping to display pong message and bot ping.",
                                     color=discord.Colour.random())
-                embed.set_footer(text=f"'Have fun!",icon_url=ctx.author.avatar)
+                embed.set_footer(text=f"Have fun!",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)
 
             elif choice == "lb" or choice == "leaderboard":
                 embed = discord.Embed(title="Leaderboard :crown:",
                                     description="Type !lb [choice] or !leaderboard [choice] to display \nthe leaderboard in the server or globally.\n\n For [choice], type either server or global.\nex: !lb server",
                                     color=discord.Colour.random())
-                embed.set_footer(text=f"'Ranked from most rich to most poor.",icon_url=ctx.author.avatar)
+                embed.set_footer(text=f"Ranked from most rich to most poor.",icon_url=ctx.author.avatar)
+                await ctx.send(embed=embed)
+
+            elif choice == "Roll" or choice == "roll" or choice == "rl":
+                embed = discord.Embed(title="Roll <a:animated_dice:1075250955077038150>",
+                                    description="Type !roll [guess] [bet_amount] or !rl [bet_amount] for a chance\nto get four times or double your bet!\nThis game is based off the dice game called Over Under 7.\n\nex: !rl <7 50\nex: !rl =7 50\nex: !rl >7 50",
+                                    color=discord.Colour.random())
+                embed.set_footer(text=f"you can use 'l' instead of '<7' or \n'e' instead of '=7' or \n'g' instead of '>7' for your guess.",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)
 
             elif choice == "slots" or choice == "slot":
@@ -177,7 +183,7 @@ class Help(commands.Cog):
             rank = sorted(rank,reverse=True)
 
             embed = discord.Embed(title = f':money_mouth: Top {total} Richest People :money_mouth:',description = 'Decided by total cash of each person.',colour=discord.Colour.gold())
-            
+
             i = 1
             for amount in rank:
                 id_ = leaderboard[amount]

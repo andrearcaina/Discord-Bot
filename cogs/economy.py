@@ -146,7 +146,7 @@ class Economy(commands.Cog):
         embed = discord.Embed(title=":briefcase::zzz:",description="After a long shift, here's what you earned!",color=discord.Colour.gold())
         embed.add_field(name="Earnings:",value=f"${amount}",inline=False)
         embed.add_field(name="New Balance:",value=f"${user_eco[str(ctx.author.id)]['Balance']}")
-        embed.set_footer(text="Want more? wait 1 minute to run this command again! (or try others)",icon_url=None)
+        embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
 
         write(user_eco)
 

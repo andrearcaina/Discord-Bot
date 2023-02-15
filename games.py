@@ -3,6 +3,75 @@ from random import randint, choice
 import discord
 import asyncio,time
 
+async def play_roll(ctx,guess,amount,user_eco):
+    '''
+    main idea
+
+    bot will show animated dice
+    after 3 seconds
+    will show the first die
+    then it will show animated dice
+    after 3 seconds
+    will show second die
+
+    purely based on luck and rng ofc lololol
+
+    '''
+    
+    emoji_id = "<a:animated_dice:1075250955077038150>,<:dice1:1075251125319651329>,<:dice2:1075251123235074138>,<:dice3:1075251121980964884>,<:dice4:1075251126871523338>,<:dice5:1075280427176181791>,<:dice6:1075251118898159626>".split(',')
+
+    numb = randint(1,6)
+
+    embed = discord.Embed(title="Rolling a...",description=f"{emoji_id[0]}",color=discord.Colour.gold()) 
+    message = await ctx.send(embed=embed)
+    await asyncio.sleep(3)
+
+    embed.description=f"{emoji_id[numb]}"
+    await message.edit(embed=embed)
+
+    if (guess == "<7" or guess == "l") and numb == "6":
+        write(user_eco)
+        embed.title="Game!"
+        embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
+        await message.edit(embed=embed)
+        return
+    else:
+        embed.description=f"{emoji_id[numb]} {emoji_id[0]}"
+        await message.edit(embed=embed)
+        await asyncio.sleep(3)
+
+        numb2 = randint(1,6)
+
+        embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}"
+        await message.edit(embed=embed)
+
+        if (guess == "=7" or guess == "e") and (numb+numb2==7):
+            user_eco[str(ctx.author.id)]["Balance"] += amount*4
+            write(user_eco)
+            embed.title="Game!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*4}!"
+            await message.edit(embed=embed)
+            return
+        elif (guess == ">7" or guess == "g") and (numb+numb2>=7):
+            user_eco[str(ctx.author.id)]["Balance"] += amount*2
+            write(user_eco)
+            embed.title="Game!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*2}!"
+            await message.edit(embed=embed)
+            return
+        elif (guess == "<7" or guess == "l") and (numb+numb2<=7):
+            user_eco[str(ctx.author.id)]["Balance"] += amount*2
+            write(user_eco)
+            embed.title="Game!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*2}!"
+            await message.edit(embed=embed)
+            return
+        else:
+            write(user_eco)
+            embed.title="Game!"
+            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You lost ${amount}! Take the L."
+            await message.edit(embed=embed)
+            return
 
 async def play_cf(ctx,choice,numb,amount,user_eco):
     if (choice == "tails" and numb == 1) or (choice == "heads" and numb == 2):
