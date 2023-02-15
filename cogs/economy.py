@@ -28,7 +28,7 @@ class Economy(commands.Cog):
         embed.set_footer(text="Want to increase balance? go gamble or beg FOOL!",icon_url=None)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["give","grant"])
+    @commands.command(aliases=["Send","give","grant"])
     async def send(self,ctx,member:discord.Member,amount = None):
         user_eco = open_account(ctx.author.id)
         user_eco = open_account(member.id)
@@ -74,7 +74,7 @@ class Economy(commands.Cog):
         member = str(member)[:-5]
         await ctx.send(f"You have given {amount} dollars to {member}!")
 
-    @commands.cooldown(1,3600,commands.BucketType.user)
+    @commands.cooldown(1,60,commands.BucketType.user)
     @commands.command(aliases=["Beg"])
     async def beg(self,ctx):
         user_eco = open_account(ctx.author.id)
@@ -84,8 +84,13 @@ class Economy(commands.Cog):
         new_bal = cur_bal + amount
         
         if cur_bal == 0:
-            embed = discord.Embed(title="pedestrians and even the yakuza scoff at you.",description=f"You're dirt poor. stop trying",color=discord.Colour.red())
+            gang = ":ninja:"*3
+            embed = discord.Embed(title="Oh no! you've been robbed!",description=f"A group of robbers saw an opportunity, and well, boom! {gang} UNLUCKY",color=discord.Colour.red())
+            embed.add_field(name="Money lost:",value=f"none. You had no money on you.",inline=False)
+            embed.set_footer(text="next time don't go to the yakuza for money",icon_url=None)
             await ctx.send(embed=embed)
+
+            user_eco[str(ctx.author.id)]["Balance"] = 0
 
         if 20 <= cur_bal <= 50:
             gang = ":ninja:"*3
@@ -117,7 +122,7 @@ class Economy(commands.Cog):
             embed = discord.Embed(title="Some kind souls are kind to a nobody like you!",description=money,color=discord.Colour.green())
             embed.add_field(name="Money gained:",value=f"${abs(amount)}",inline=False)
             embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-            embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
+            embed.set_footer(text="Want more? wait 1 minute to run this command again! (or try others)",icon_url=None)
             
             await ctx.send(embed=embed)
 
@@ -127,7 +132,7 @@ class Economy(commands.Cog):
 
         elif new_bal == cur_bal:
             embed = discord.Embed(title="L bozo. get back to being homeless",description="begging ain't the best option. look at the map",color=discord.Colour.red())
-            embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
+            embed.set_footer(text="Want more? wait 1 minute to run this command again! (or try others)",icon_url=None)
             await ctx.send(embed=embed)
 
     @commands.cooldown(1,3600,commands.BucketType.user)       
@@ -141,7 +146,7 @@ class Economy(commands.Cog):
         embed = discord.Embed(title=":briefcase::zzz:",description="After a long shift, here's what you earned!",color=discord.Colour.gold())
         embed.add_field(name="Earnings:",value=f"${amount}",inline=False)
         embed.add_field(name="New Balance:",value=f"${user_eco[str(ctx.author.id)]['Balance']}")
-        embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
+        embed.set_footer(text="Want more? wait 1 minute to run this command again! (or try others)",icon_url=None)
 
         write(user_eco)
 
@@ -206,8 +211,8 @@ class Economy(commands.Cog):
 
             write(user_eco)
 
-    @commands.command(aliases=["wi","with","wd"])
-    async def withdraw(self,ctx,amount=None):
+    @commands.command(aliases=["withdraw","wi","with","wd"])
+    async def Withdraw(self,ctx,amount=None):
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Vault"] 
@@ -241,8 +246,8 @@ class Economy(commands.Cog):
 
         await ctx.send(f"You have withdrawed {amount} dollars from your vault!")
     
-    @commands.command(aliases=["d","de","dep"])
-    async def deposit(self,ctx,amount=None):
+    @commands.command(aliases=["deposit","d","de","dep"])
+    async def Deposit(self,ctx,amount=None):
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]

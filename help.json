@@ -1,0 +1,28 @@
+{
+    ":coin: Welcome to Economy Bot! :coin:" : {
+        " Need any help? :arrow_down:" : "\nPress the reactions below to see more! \n !help [command_name] for more info!"
+    },
+    
+    ":gear: General Commands :gear:" : {
+        "Leaderboard :crown:" : "Check the top 5 richest people.",
+        "Ping :ping_pong:" : "Sends a pong message with the bot's latency."
+    },
+    ":moneybag: Casino Commands :moneybag:" : {
+        "Slots :t_rex:" : "Play slots for a chance to get more money!",
+        "Coinflip :dolphin:" : "Flip a coin for a chance to get double your money!",
+        "Race :snail:" : "Bet on an animal to get a chance of tenfold your money!",
+        "Blackjack :black_joker:" : "Play blackjack against the bot to win money!"
+    },
+    ":bank: Bank Commands :bank:" : {
+        "Balance :dollar:" : "Check your wallet and vault.",
+        "Deposit :dollar:" : "Deposit a certain amount into your vault.",
+        "Withdraw :dollar:" : "Withdraw a certain amount from your vault.",
+        "Send :moneybag:" : "Give money to other members in the server."
+    },
+    ":watermelon: Life Commands :watermelon:" : {
+        "Beg :coin:" : "Beg for money in Toronto!",
+        "Rob :ninja:" : "Rob a store for a chance of money!",
+        "Steal :atm:" : "Be a sneaky member and steal from\nother members in the server!",
+        "Work :briefcase:" : "Work for 8 hours straight (no lunch breaks)\nand get paid minimum wage!"
+    }
+}

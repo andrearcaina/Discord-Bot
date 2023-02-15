@@ -13,8 +13,8 @@ class Gamble(commands.Cog):
         print('casino commands are ready for use')
 
     @commands.cooldown(1,2,commands.BucketType.user)
-    @commands.command(aliases=["cf"])
-    async def coinflip(self,ctx,amount=None,choice="heads"):
+    @commands.command(aliases=["cf","coinflip"])
+    async def Coinflip(self,ctx,amount=None,choice="heads"):
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
@@ -45,8 +45,8 @@ class Gamble(commands.Cog):
         await play_cf(ctx,choice,numb,amount,user_eco)
 
     @commands.cooldown(1,2,commands.BucketType.user)
-    @commands.command(aliases=["slot"])
-    async def slots(self,ctx,amount=None):
+    @commands.command(aliases=["slot","slots"])
+    async def Slots(self,ctx,amount=None):
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
@@ -72,8 +72,8 @@ class Gamble(commands.Cog):
 
         await play_slots(ctx,amount,user_eco)
 
-    @commands.command(aliases=["horserace","animalrace"])
-    async def race(self,ctx,choice=None,amount=None):
+    @commands.command(aliases=["race","horserace","animalrace"])
+    async def Race(self,ctx,choice=None,amount=None):
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
@@ -107,29 +107,10 @@ class Gamble(commands.Cog):
             write(user_eco)
             await play_race(ctx,choice,amount,user_eco)
 
-    @commands.command()
-    async def blackjack(self,ctx,member:discord.Member = None):
-        user_eco = open_account(ctx.author.id)
-
-        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
-
-        
-
-        if member == None:
-            member = ctx.author
-        
-        name = member.display_name
-        pfp = member.display_avatar
-
-        embed = discord.Embed(title="Blackjack", description="W.I.P Blackjack", colour=discord.Colour.random())
-        embed.set_author(name=f"{name}")
-        embed.set_thumbnail(url=f"{pfp}")
-        embed.add_field(name="Field 1", value="field value test")
-        embed.add_field(name="2nd field", value="inline True", inline=True)
-        embed.add_field(name="rdd3 feild", value="false inline", inline=False)
-        embed.set_footer(text=f"{name} wwaassz")
-        
-        await ctx.send(embed=embed)
+    @commands.cooldown(1,30,commands.BucketType.user)
+    @commands.command(aliases=["blackjack","bj"])
+    async def Blackjack(self,ctx): 
+        await ctx.send("WIP")
     
 async def setup(bot):
     await bot.add_cog(Gamble(bot))
