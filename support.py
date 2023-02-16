@@ -32,3 +32,34 @@ def multiHelp(pageNum=0,inline=False):
         embed.set_footer(text=f"Page {pageNum+1} of {len(list(helpGuide))}")
     
     return embed
+
+def hit_value(value,total):
+    if value == "a":
+        if total > 10:
+            return 1
+        else:
+            return 11
+    elif value == "j":
+        return 10
+    elif value == "q":
+        return 10
+    elif value == "k":
+        return 10
+    elif value == "1":
+        return 10
+    else:
+        return int(value) 
+
+def first_value(value):
+    if value == "a":
+        return 11
+    elif value == "j":
+        return 10
+    elif value == "q":
+        return 10
+    elif value == "k":
+        return 10
+    elif value == "1":
+        return 10
+    else:
+        return int(value)

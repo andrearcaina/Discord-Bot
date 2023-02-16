@@ -2,6 +2,7 @@ from support import *
 from random import randint, choice
 import discord
 import asyncio,time
+import buttons
 
 async def play_roll(ctx,guess,amount,user_eco):
     '''
