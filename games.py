@@ -2,7 +2,7 @@ from support import *
 from random import randint, choice
 import discord
 import asyncio,time
-import buttons
+from config import EMOJI_ID
 
 async def play_roll(ctx,guess,amount,user_eco):
     '''
@@ -19,64 +19,62 @@ async def play_roll(ctx,guess,amount,user_eco):
 
     '''
     
-    emoji_id = "<a:animated_dice:1075250955077038150>,<:dice1:1075251125319651329>,<:dice2:1075251123235074138>,<:dice3:1075251121980964884>,<:dice4:1075251126871523338>,<:dice5:1075280427176181791>,<:dice6:1075251118898159626>".split(',')
-
     numb = randint(1,6)
 
-    embed = discord.Embed(title="Rolling a...",description=f"{emoji_id[0]}",color=discord.Colour.gold()) 
+    embed = discord.Embed(title="Rolling a...",description=f"{EMOJI_ID[0]}",color=discord.Colour.gold()) 
     message = await ctx.send(embed=embed)
     await asyncio.sleep(3)
 
-    embed.description=f"{emoji_id[numb]}"
+    embed.description=f"{EMOJI_ID[numb]}"
     await message.edit(embed=embed)
 
     if numb == 6 and (guess == "<7" or guess == "l"):
         write(user_eco)
         embed.title="Game!"
-        embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
+        embed.description=f"{EMOJI_ID[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
         await message.edit(embed=embed)
         return
     if numb == 1 and (guess == ">7" or guess == "g"):
         write(user_eco)
         embed.title="Game!"
-        embed.description=f"{emoji_id[numb]}\nThere is no possible two die combinations\nto get greater than 7!\nUnlucky, You lost ${amount}! L."
+        embed.description=f"{EMOJI_ID[numb]}\nThere is no possible two die combinations\nto get greater than 7!\nUnlucky, You lost ${amount}! L."
         await message.edit(embed=embed)
         return
     else:
-        embed.description=f"{emoji_id[numb]} {emoji_id[0]}"
+        embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[0]}"
         await message.edit(embed=embed)
         await asyncio.sleep(3)
 
         numb2 = randint(1,6)
 
-        embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}"
+        embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}"
         await message.edit(embed=embed)
 
         if (guess == "=7" or guess == "e") and (numb+numb2==7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*5
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*5}!"
+            embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*5}!"
             await message.edit(embed=embed)
             return
         elif (guess == ">7" or guess == "g") and (numb+numb2>7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*3
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*3}!"
+            embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
         elif (guess == "<7" or guess == "l") and (numb+numb2<7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*3
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You won ${amount*3}!"
+            embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
         else:
             write(user_eco)
             embed.title="Game!"
-            embed.description=f"{emoji_id[numb]} {emoji_id[numb2]}\n\n You lost ${amount}! Take the L."
+            embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You lost ${amount}! Take the L."
             await message.edit(embed=embed)
             return
 

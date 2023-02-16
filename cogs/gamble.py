@@ -163,8 +163,7 @@ class Gamble(commands.Cog):
 
         if amount == "all" and cur_bal > 0:
             user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
-            #write(user_eco)
-            #await play_bj(ctx,cur_bal,user_eco)
+            write(user_eco)
             await Blackjack().play_bj(ctx,cur_bal,user_eco)
             return
             
@@ -182,8 +181,7 @@ class Gamble(commands.Cog):
             await ctx.send("Amount must be positive!")
             return
 
-        #write(user_eco)
-        #await play_bj(ctx,amount,user_eco)
+        write(user_eco)
         await Blackjack().play_bj(ctx,amount,user_eco)
     
 async def setup(bot):

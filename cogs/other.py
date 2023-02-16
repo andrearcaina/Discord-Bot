@@ -102,6 +102,13 @@ class Help(commands.Cog):
                 embed.set_footer(text=f"'!race [animal] all' will make your bet_amount your current balance.",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)
             
+            elif choice == "blackjack" or choice == "bj" or choice == "Blackjack":
+                embed = discord.Embed(title="Blackjack :black_joker:",
+                                    description="Type !blackjack [bet_amount] or !bj [bet_amount] for a chance to get triple or double times your bet!\n\nThis game is based off the traditional blackjack.\nYou can hit, double down, or stand.\nAnything above 21 is a bust!\n\nex: !bj 50",
+                                    color=discord.Colour.random())
+                embed.set_footer(text=f"'!bj all' will make your bet_amount your current balance.",icon_url=ctx.author.avatar)
+                await ctx.send(embed=embed)
+            
             elif choice == "send" or choice == "give":
                 embed = discord.Embed(title="Send :moneybag:",
                                     description="Type !send @discordmember [amount] or\n!give @discordmember [amount] to send them money.\n\nex: !send @psykthe 50",

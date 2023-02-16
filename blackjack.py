@@ -1,9 +1,9 @@
 import discord
-from discord.ext import commands
 from random import choice
 from support import *
 import asyncio
-import buttons
+import interactions
+from config import DECK
 
 '''
     Standard rules of blackjack
@@ -37,60 +37,9 @@ class Blackjack():
         self.dValue2 = 0
         self.pdeck = []
         self.ddeck = []
-        self.pHand = 2
-        self.deck = [   "<:2spades:1075610591181414422>",
-                        "<:2hearts:1075610590183174144>",
-                        "<:2diamonds:1075610589012959274>",
-                        "<:2clovers:1075610587033260122>",
-                        "<:3spades:1075610595824504942>",
-                        "<:3hearts:1075610594427797535>",
-                        "<:3diamonds:1075610593874153574>",
-                        "<:3clover:1075610592188059658>",
-                        "<:4spades:1075611286706061402>",
-                        "<:4hearts:1075611285699440700>",
-                        "<:4diamonds:1075610598370443324>",
-                        "<:4clovers:1075611283950415962>",
-                        "<:5spades:1075611290606776462>",
-                        "<:5hearts:1075611288958402560>",
-                        "<:5diamonds:1075610601759449098>",
-                        "<:5clovers:1075611287779823646>",
-                        "<:6spades:1075611294369075220>",
-                        "<:6hearts:1075611292674568273>",
-                        "<:6diamonds:1075610604926156880>",
-                        "<:6clovers:1075611291529515108>",
-                        "<:7spades:1075611435138285599>",
-                        '<:7hearts:1075611434454626304>',
-                        '<:7diamonds:1075610608331919451>',
-                        '<:7clovers:1075611432156147742>',
-                        '<:8spades:1075611439785578657>',
-                        '<:8hearts:1075611297766453389>',
-                        '<:8diamonds:1075610611788034058>',
-                        '<:8clovers:1075611436589514772>',
-                        '<:9spades:1075611526733500436>',
-                        '<:9hearts:1075610615323824128>',
-                        '<:9diamonds:1075611525433274491>',
-                        '<:9clovers:1075611523503886366>',
-                        '<:10spades:1075611530462240798>',
-                        '<:10hearts:1075611528734179339>',
-                        '<:10diamonds:1075610618444386406>',
-                        '<:10clovers:1075611301893636107>',
-                        '<:acespades:1075611534488768612>',
-                        '<:acehearts:1075610622298951680>',
-                        '<:acediamonds:1075611305026793503>',
-                        '<:aceclovers:1075611531535974480>',
-                        '<:jackspades:1075610626061250641>',
-                        '<:jackhearts:1075611654538137620>',
-                        '<:jackdiamond:1075611653141434368>',
-                        '<:jackclovers:1075611650721316925>',
-                        '<:queenspades:1075612145192022046>',
-                        '<:queenhearts:1075612144189591552>',
-                        '<:queendiamond:1075612143115829309>', 
-                        '<:queenclovers:1075612141475872838>',
-                        '<:kingspades:1075610629366358087>',
-                        '<:kinghearts:1075612139613589505>',
-                        '<:kingdiamonds:1075611657075703858>', 
-                        '<:kingclovers:1075611655297323039>'
-                    ]
+        self.playerhit = None
+        self.dealerhit = None
+        self.deck = DECK
         
     async def play_bj(self,ctx,amount,user_eco):
         #first round of cards dealt and drawn
@@ -108,10 +57,10 @@ class Blackjack():
         self.deck.remove(pcard2)
         self.pdeck.append(pcard2)
 
-        self.dValue1 = first_value(dcard1[2])
-        self.dValue2 = first_value(dcard2[2])
-        self.pValue1 = first_value(pcard1[2])
-        self.pValue2 = first_value(pcard2[2])
+        self.dValue1 = Blackjack().first_value(dcard1[2])
+        self.dValue2 = Blackjack().hit_value(dcard2[2],self.dValue1)
+        self.pValue1 = Blackjack().first_value(pcard1[2])
+        self.pValue2 = Blackjack().hit_value(pcard2[2],self.pValue1)
 
         self.dealerTotal = self.dValue1+self.dValue2
         self.playerTotal = self.pValue1+self.pValue2
@@ -120,32 +69,90 @@ class Blackjack():
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(2)
         embed.title = "Dealer: 'Lets Play Some Blackjack!'" #add animation emote
-        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDeal Hand: {dcard1} {dcard2} Total value: {self.dealerTotal}"
-        await msg.edit(embed=embed,view=buttons.allButtons(ctx.author,self.playerTotal,self.dealerTotal,self.pValue1,self.pValue2,self.dValue1,self.dValue2,self.pdeck,self.ddeck,self.pHand,self.deck))
+        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {dcard2} Total value: {self.dealerTotal}"
+        view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,2,2,user_eco,amount)
+        await msg.edit(embed=embed,view=view)
 
-        async def pWin(ctx,embed):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*2
-            write(user_eco)
-            embed.title="Dealer: 'Congrats...'"
-            embed.description = f'You Won!\n\nYou gained: ${amount*2}!'
-            await msg.edit(embed=embed)
-        
-        async def tie(ctx,embed):
-            user_eco[str(ctx.author.id)]["Balance"] += amount
-            write(user_eco)
-            embed.title="Dealer: 'Mhm...'"
-            embed.description = f'You Tied with the Dealer!\n\nYou going your money back!'
-            await msg.edit(embed=embed)
+        await asyncio.sleep(1)
 
-        async def BJ(ctx,embed):
-            user_eco[str(ctx.author.id)]["Balance"] += amount*3
-            write(user_eco)
-            embed.title="Dealer: 'Congrats...'"
-            embed.description = f'You got Blackjack!\n\nYou gained: ${amount*3}!'
-            await msg.edit(embed=embed)
+        if self.dealerTotal == 21:
+            await Blackjack().L(msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
 
-        async def L(embed):
+        if self.playerTotal == 21:
+            await Blackjack().B(ctx,msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
+    
+    async def T(self,ctx,msg,embed,user_eco,amount):
+        user_eco[str(ctx.author.id)]["Balance"] += amount
+        write(user_eco)
+        embed.title="Dealer: 'Not Bad...'"
+        embed.description = f'You Tied with the Dealer!\n\nYou got your money back!'
+        return await msg.edit(embed=embed,view=None)
+
+    async def B(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
+        user_eco[str(ctx.author.id)]["Balance"] += amount*3
+        write(user_eco)
+        pd = " ".join(pd)
+        dd = " ".join(dd)
+        embed.title="Dealer: 'Congrats, I guess.'"
+        embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou won: ${amount*3}!"
+        return await msg.edit(embed=embed,view=None)
+
+    async def L(self,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
             write(user_eco)
             embed.title="Dealer: 'Take L.'"
-            embed.description = f'You lost!\n\nYou lost: ${amount}!'
-            await msg.edit(embed=embed)
+            pd = " ".join(pd)
+            dd = " ".join(dd)
+            embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou're bad!\nSome unfortunate news! You lost: ${amount}!"
+            await msg.edit(embed=embed,view=None)
+
+    async def newPlayerCard(self,total):
+        self.playerhit = choice(self.deck)
+        self.deck.remove(self.playerhit)
+        
+        hitValue = Blackjack().hit_value(self.playerhit[2],total)
+
+        return int(hitValue),self.playerhit
+
+    async def newDealerCard(self,total):
+        self.dealerhit = choice(self.deck)
+        self.deck.remove(self.dealerhit)
+
+        hitValue = Blackjack().hit_value(self.dealerhit[2],total)
+
+        return int(hitValue),self.dealerhit
+
+    async def displayCards(self,pdeck,ddeck,ptotal,dtotal):
+        pdeck = " ".join(pdeck)
+        ddeck = " ".join(ddeck)
+        return discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",description=f"Your Hand: {pdeck} Total value: {ptotal}\n\nDealer Hand: {ddeck} Total value: {dtotal}")
+    
+    def hit_value(self,value,total):
+        if value == "a":
+            if total > 10:
+                return 1
+            else:
+                return 11
+        elif value == "j":
+            return 10
+        elif value == "q":
+            return 10
+        elif value == "k":
+            return 10
+        elif value == "1":
+            return 10
+        else:
+            return int(value) 
+
+    def first_value(self,value):
+        if value == "a":
+            return 11
+        elif value == "j":
+            return 10
+        elif value == "q":
+            return 10
+        elif value == "k":
+            return 10
+        elif value == "1":
+            return 10
+        else:
+            return int(value)
