@@ -84,8 +84,8 @@ class Play(discord.ui.View):
         if self.pT > 21: #if they bust
             await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).L(interaction,self.a)
 
-        elif self.pT == 21: #if they get 21 they insta win
-            await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).W(interaction,self.a)
+        elif self.pT == 21: #if they get 21 they stand and the dealer goes and tries to hit 21 as well to tie (or they bust/stand)
+            await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).do_stand(interaction,self.a)
 
     #stand win lose
     async def do_stand(self, interaction: discord.Interaction,amt):
