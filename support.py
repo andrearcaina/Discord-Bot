@@ -15,6 +15,7 @@ def open_account(user):
         user_eco[str(user)] = {}
         user_eco[str(user)]["Balance"] = 100
         user_eco[str(user)]["Vault"] = 0
+        user_eco[str(user)]["In Game"] = False
 
         write(user_eco)
 

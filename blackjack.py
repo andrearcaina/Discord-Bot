@@ -39,6 +39,7 @@ class Blackjack():
         self.ddeck = []
         self.playerhit = None
         self.dealerhit = None
+        self.facedown = "<:facedown:1076126049743675533>"
         self.deck = DECK
         
     async def play_bj(self,ctx,amount,user_eco):
@@ -48,6 +49,7 @@ class Blackjack():
         self.ddeck.append(dcard1)
         dcard2 = choice(self.deck)
         self.deck.remove(dcard2)
+        self.ddeck.append(self.facedown)
         self.ddeck.append(dcard2)
 
         pcard1 = choice(self.deck)
@@ -69,41 +71,56 @@ class Blackjack():
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(2)
         embed.title = "Dealer: 'Lets Play Some Blackjack!'" #add animation emote
-        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {dcard2} Total value: {self.dealerTotal}"
-        view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,2,2,user_eco,amount)
+        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {self.ddeck[1]} Total value: {self.dValue1}"
+        view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,self.dValue1,2,2,user_eco,amount)
+        view.remove_item(view.btn4)
+        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+        if cur_bal == amount or (amount > cur_bal): #if user decides to bet all of his money or more than half his money
+            view.remove_item(view.btn2) #can't double down
         await msg.edit(embed=embed,view=view)
 
         await asyncio.sleep(1)
 
         if self.dealerTotal == 21:
-            await Blackjack().L(msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
+            await Blackjack().L(ctx,msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
 
-        if self.playerTotal == 21:
+        elif self.playerTotal == 21:
             await Blackjack().B(ctx,msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
-    
-    async def T(self,ctx,msg,embed,user_eco,amount):
+        
+        elif self.playerTotal==self.dealerTotal==21:
+            await Blackjack().T(ctx,msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
+
+    async def B(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["Balance"] += amount
+        user_eco[str(ctx.author.id)]["In Game"] = False
         write(user_eco)
-        embed.title="Dealer: 'Not Bad...'"
-        embed.description = f'You Tied with the Dealer!\n\nYou got your money back!'
-        return await msg.edit(embed=embed,view=None)
+        dd.remove("<:facedown:1076126049743675533>")
+        pd = " ".join(self.pd)
+        dd = " ".join(self.dd)
+        embed.title="Dealer: 'Wow. Not Bad.'"
+        embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou Tied with the Dealer!\n\nYou got your money back!"
+        await msg.edit(embed=embed,view=None)
 
     async def B(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["Balance"] += amount*3
+        user_eco[str(ctx.author.id)]["In Game"] = False
         write(user_eco)
+        dd.remove("<:facedown:1076126049743675533>")
         pd = " ".join(pd)
         dd = " ".join(dd)
         embed.title="Dealer: 'Congrats, I guess.'"
         embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou won: ${amount*3}!"
         return await msg.edit(embed=embed,view=None)
 
-    async def L(self,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
-            write(user_eco)
-            embed.title="Dealer: 'Take L.'"
-            pd = " ".join(pd)
-            dd = " ".join(dd)
-            embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou're bad!\nSome unfortunate news! You lost: ${amount}!"
-            await msg.edit(embed=embed,view=None)
+    async def L(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
+        user_eco[str(ctx.author.id)]["In Game"] = False
+        write(user_eco)
+        dd.remove("<:facedown:1076126049743675533>")
+        pd = " ".join(pd)
+        dd = " ".join(dd)
+        embed.title="Dealer: 'Take L.'" 
+        embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou're bad!\nSome unfortunate news! You lost: ${amount}!"
+        await msg.edit(embed=embed,view=None)
 
     async def newPlayerCard(self,total):
         self.playerhit = choice(self.deck)

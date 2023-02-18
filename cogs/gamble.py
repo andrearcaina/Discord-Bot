@@ -154,25 +154,35 @@ class Gamble(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-    @commands.cooldown(1,0,commands.BucketType.user)
     @commands.command(aliases=["blackjack","bj"])
     async def Blackjack(self,ctx,amount=None): 
         user_eco = open_account(ctx.author.id)
 
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+        playing = user_eco[str(ctx.author.id)]["In Game"]
 
+        if(playing):
+            await ctx.send("You're already in a game!")
+            return
+ 
         if amount == "all" and cur_bal > 0:
             user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
             write(user_eco)
+                
             await Blackjack().play_bj(ctx,cur_bal,user_eco)
             return
             
-        if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
+        if amount is None or (amount == "all" and cur_bal == 0):
             await ctx.send("Please enter an amount to send.")
             return 
 
         amount = int(amount)
+        if amount == 0:
+            await ctx.send("You can't bet 0 dollars.")
+            return
+
         user_eco[str(ctx.author.id)]["Balance"] -= amount #pay first, then play
+        user_eco[str(ctx.author.id)]["In Game"] = True
 
         if amount>cur_bal:
             await ctx.send("You don't have that much money!")
