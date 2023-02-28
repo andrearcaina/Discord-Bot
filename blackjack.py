@@ -71,8 +71,8 @@ class Blackjack():
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(2)
         embed.title = "Dealer: 'Lets Play Some Blackjack!'" #add animation emote
-        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {self.ddeck[1]} Total value: {self.dValue1}\n\nYour Bet: {amount}\n\nInsurance: 0"
-        view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,self.dValue1,2,2,user_eco,amount)
+        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {self.ddeck[1]} Total value: {self.dValue1}\n\nYour Bet: {amount}\nInsurance: 0"
+        view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,self.dValue1,2,2,user_eco,amount,0)
         view.remove_item(view.btn4)
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         if cur_bal == amount or (amount > cur_bal): #if user decides to bet all of his money or more than half his money
