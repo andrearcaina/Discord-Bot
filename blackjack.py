@@ -71,12 +71,15 @@ class Blackjack():
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(2)
         embed.title = "Dealer: 'Lets Play Some Blackjack!'" #add animation emote
-        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {self.ddeck[1]} Total value: {self.dValue1}"
+        embed.description = f"Your Hand: {pcard1} {pcard2} Total value: {self.playerTotal}\n\nDealer Hand: {dcard1} {self.ddeck[1]} Total value: {self.dValue1}\n\nYour Bet: {amount}\n\nInsurance: 0"
         view = interactions.Play(ctx.author,self.playerTotal,self.dealerTotal,self.pdeck,self.ddeck,self.deck,self.dValue1,2,2,user_eco,amount)
         view.remove_item(view.btn4)
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         if cur_bal == amount or (amount > cur_bal): #if user decides to bet all of his money or more than half his money
             view.remove_item(view.btn2) #can't double down
+        if self.dValue1 == 11:
+            view.add_item(view.btn4)
+            view.remove_item(view.btn2)
         await msg.edit(embed=embed,view=view)
 
         await asyncio.sleep(1)
@@ -90,7 +93,7 @@ class Blackjack():
         elif self.playerTotal==self.dealerTotal==21:
             await Blackjack().T(ctx,msg,embed,self.pdeck,self.ddeck,self.playerTotal,self.dealerTotal,user_eco,amount)
 
-    async def B(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
+    async def T(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["Balance"] += amount
         user_eco[str(ctx.author.id)]["In Game"] = False
         write(user_eco)
@@ -110,7 +113,7 @@ class Blackjack():
         dd = " ".join(dd)
         embed.title="Dealer: 'Congrats, I guess.'"
         embed.description = f"Your Hand: {pd} Total value: {ptotal}\n\nDealer Hand: {dd} Total value: {dtotal}\n\nYou won: ${amount*3}!"
-        return await msg.edit(embed=embed,view=None)
+        await msg.edit(embed=embed,view=None)
 
     async def L(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["In Game"] = False

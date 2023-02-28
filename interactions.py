@@ -1,6 +1,15 @@
 import discord
 from support import *
+from math import ceil
 import blackjack as BJ
+
+'''
+btn1 = hit
+btn2 = double down
+btn3 = stand
+btn4 = insurance bet (original bet divided by 2)
+
+'''
 
 class Play(discord.ui.View):
     def __init__(self,author,playerTotal,dealerTotal,pdeck,ddeck,deck,dV,pH,dH,user_eco,amount):
@@ -16,6 +25,8 @@ class Play(discord.ui.View):
         self.dV = dV
         self.pH = pH
         self.dH = dH
+        self.added_bet = 0
+        self.insurance = False
 
     async def interaction_check(self,interaction: discord.Interaction):
         return interaction.user.id == self.author.id
@@ -42,7 +53,8 @@ class Play(discord.ui.View):
             view.remove_item(view.btn4)
             self.pd = " ".join(self.pd)
             self.dd = " ".join(self.dd[0:2])
-            embed = discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",description=f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dV}")
+            embed = discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",
+                                  description=f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dV}\n\nYour Bet: {self.a}\n\nInsurance: {self.added_bet}")
             await interaction.response.edit_message(embed=embed,view=view)
 
     #double down button
@@ -75,14 +87,35 @@ class Play(discord.ui.View):
         await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).do_stand(interaction,self.a)
 
     @discord.ui.button(label="Insurance Bet",style=discord.ButtonStyle.green,emoji="📋")
-    async def btn4(self, interaction: discord.Interaction, button: discord.ui.Button):        
-        pass #insurance bet, will work on later
+    async def btn4(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.added_bet = ceil(self.a/2)
+        self.insurance = True
+        '''
+        bet 10
+        bet 5
+        if the dealer gets blackjack, you lose 10 and win ur insurance bet (5x2 = 10), thus having a profit of 0 bucks
+        if the dealer doesn't have blackjack and you have an insurance bet but you win the handn, you lose 5 bucks but win 20 bucks, resulting in 15 total bucks
+        if the dealer does have blackjack and you don't have an insurance bet and you don't have a 21, you lose 15 bucks
+        the insurance bet is aside the original bet
+
+        '''
+        view = Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a)
+        view.remove_item(view.btn2)
+        view.remove_item(view.btn4)
+        self.pd = " ".join(self.pd)
+        self.dd = " ".join(self.dd[0:2])
+        embed = discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",
+                              description=f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dV}\n\nYour Bet: {self.a}\n\nInsurance: {self.added_bet}")
+        await interaction.response.edit_message(embed=embed,view=view)
 
     #hit lose win
     async def do_hit(self,interaction: discord.Interaction):
         self.dd.remove("<:facedown:1076126049743675533>")
         if self.pT > 21: #if they bust
-            await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).L(interaction,self.a)
+            if self.insurance: #if they have insurance and bust they lose
+                await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).L(interaction,self.a+self.added_bet)
+            else:
+                await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).L(interaction,self.a)
 
         elif self.pT == 21: #if they get 21 they stand and the dealer goes and tries to hit 21 as well to tie (or they bust/stand)
             await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).do_stand(interaction,self.a)
@@ -90,7 +123,16 @@ class Play(discord.ui.View):
     #stand win lose
     async def do_stand(self, interaction: discord.Interaction,amt):
         self.a = amt
-        if self.dT >= 17:    
+        if self.insurance and self.dT == 21:
+            pass
+            
+        elif not self.insurance and self.dT == 21:
+            pass
+
+        elif self.insurance and self.dT >= 17:
+            pass
+
+        elif not self.insurance and self.dT >= 17:    
             if self.pT == self.dT: #Tie
                 await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).T(interaction,self.a)
             
@@ -99,7 +141,7 @@ class Play(discord.ui.View):
             
             elif self.pT < self.dT: #Lose
                 await Play(self.author,self.pT,self.dT,self.pd,self.dd,self.deck,self.dV,self.pH,self.dH,self.ue,self.a).L(interaction,self.a)
-        
+
         else: #if dealer total is less than 17 or player hand > dealer hand
             if self.dH != 0:
                 for i in self.dd:
