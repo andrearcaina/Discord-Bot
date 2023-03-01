@@ -43,7 +43,7 @@ class Economy(commands.Cog):
             user_eco[str(ctx.author.id)]["Balance"] -= cur_bal
             user_eco[str(member.id)]["Balance"] += cur_bal
 
-            write(user_eco)
+            update_eco(user_eco)
 
             member = str(member)[:-5]
             await ctx.send(f"You have given {cur_bal} dollars to {member}!")
@@ -69,7 +69,7 @@ class Economy(commands.Cog):
         user_eco[str(ctx.author.id)]["Balance"] -= amount
         user_eco[str(member.id)]["Balance"] += amount
 
-        write(user_eco)
+        update_eco(user_eco)
 
         member = str(member)[:-5]
         await ctx.send(f"You have given {amount} dollars to {member}!")
@@ -102,7 +102,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] = 0
 
-            write(user_eco)
+            update_eco(user_eco)
 
         if cur_bal > 50 and new_bal < cur_bal:
             gang = ":ninja:"*3
@@ -115,7 +115,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] += amount
 
-            write(user_eco)
+            update_eco(user_eco)
 
         elif cur_bal > 50 and new_bal > cur_bal:
             money = ":money_with_wings:"*5
@@ -128,7 +128,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] += amount
 
-            write(user_eco)
+            update_eco(user_eco)
 
         elif new_bal == cur_bal:
             embed = discord.Embed(title="L bozo. get back to being homeless",description="begging ain't the best option. look at the map",color=discord.Colour.red())
@@ -148,7 +148,7 @@ class Economy(commands.Cog):
         embed.add_field(name="New Balance:",value=f"${user_eco[str(ctx.author.id)]['Balance']}")
         embed.set_footer(text="Want more? wait 1 hour to run this command again! (or try others)",icon_url=None)
 
-        write(user_eco)
+        update_eco(user_eco)
 
         await ctx.send(embed=embed)
 
@@ -167,7 +167,7 @@ class Economy(commands.Cog):
         user_eco[str(ctx.author.id)]["Balance"] += stolen
         user_eco[str(member.id)]["Balance"] -= stolen
 
-        write(user_eco)
+        update_eco(user_eco)
 
         member = str(member)[:-5]
         await ctx.send(f"You stole ${stolen} from {member}!")
@@ -197,7 +197,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] -= 500
 
-            write(user_eco)
+            update_eco(user_eco)
         else:
             new_bal = cur_bal + amount
             embed = discord.Embed(title="YOU Sneaky bastard!",description="sheesh. bro got out :ninja::money_with_wings:",color=discord.Colour.green())
@@ -209,7 +209,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] += amount
 
-            write(user_eco)
+            update_eco(user_eco)
 
     @commands.command(aliases=["withdraw","wi","with","wd"])
     async def Withdraw(self,ctx,amount=None):
@@ -221,7 +221,7 @@ class Economy(commands.Cog):
             user_eco[str(ctx.author.id)]["Balance"] += cur_bal
             user_eco[str(ctx.author.id)]["Vault"] -= cur_bal
 
-            write(user_eco)
+            update_eco(user_eco)
 
             await ctx.send(f"You have withdrawed {cur_bal} dollars from your vault!")
             return
@@ -242,7 +242,7 @@ class Economy(commands.Cog):
         user_eco[str(ctx.author.id)]["Balance"] += amount
         user_eco[str(ctx.author.id)]["Vault"] -= amount
 
-        write(user_eco)
+        update_eco(user_eco)
 
         await ctx.send(f"You have withdrawed {amount} dollars from your vault!")
     
@@ -256,7 +256,7 @@ class Economy(commands.Cog):
             user_eco[str(ctx.author.id)]["Balance"] -= cur_bal
             user_eco[str(ctx.author.id)]["Vault"] += cur_bal
 
-            write(user_eco)
+            update_eco(user_eco)
 
             await ctx.send(f"You have deposited {cur_bal} dollars to your vault!")
             return
@@ -277,7 +277,7 @@ class Economy(commands.Cog):
         user_eco[str(ctx.author.id)]["Balance"] -= amount
         user_eco[str(ctx.author.id)]["Vault"] += amount
 
-        write(user_eco)
+        update_eco(user_eco)
 
         await ctx.send(f"You have deposited {amount} dollars to your vault!")
 

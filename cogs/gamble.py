@@ -29,7 +29,7 @@ class Gamble(commands.Cog):
         if guess == "<7" or guess == "l" or guess == "=7" or guess == "e" or guess == ">7" or guess == "g":
             if amount == "all" and cur_bal > 0:
                 user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
-                write(user_eco)
+                update_eco(user_eco)
                 await play_roll(ctx,guess,cur_bal,user_eco)
                 return
                 
@@ -47,7 +47,7 @@ class Gamble(commands.Cog):
                 await ctx.send("Amount must be positive!")
                 return
             
-            write(user_eco)
+            update_eco(user_eco)
             await play_roll(ctx,guess,amount,user_eco)
         else:
             await ctx.send("That isn't an option! For help on this game, type !help roll.")
@@ -129,7 +129,7 @@ class Gamble(commands.Cog):
         if choice == "horse" or choice == "dragon" or choice == "trex" or choice == "snail" or choice == "tiger":
             if amount == "all" and cur_bal > 0:
                 user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
-                write(user_eco)
+                update_eco(user_eco)
                 await play_race(ctx,choice,cur_bal,user_eco)
                 
             if amount is None or amount == 0 or (amount == "all" and cur_bal == 0):
@@ -146,7 +146,7 @@ class Gamble(commands.Cog):
                 await ctx.send("Amount must be positive and nonzero!")
                 return
 
-            write(user_eco)
+            update_eco(user_eco)
             await play_race(ctx,choice,amount,user_eco)
         else:
             embed = discord.Embed(title="Race :crown:",description="Please choose an animal (horse, dragon, trex, snail, tiger) to bet on.",color=discord.Colour.random())
@@ -167,7 +167,7 @@ class Gamble(commands.Cog):
  
         if amount == "all" and cur_bal > 0:
             user_eco[str(ctx.author.id)]["Balance"] -= cur_bal #pay first, then play
-            write(user_eco)
+            update_eco(user_eco)
                 
             await Blackjack().play_bj(ctx,cur_bal,user_eco)
             return
@@ -191,7 +191,7 @@ class Gamble(commands.Cog):
             await ctx.send("Amount must be positive!")
             return
 
-        write(user_eco)
+        update_eco(user_eco)
         await Blackjack().play_bj(ctx,amount,user_eco)
     
 async def setup(bot):

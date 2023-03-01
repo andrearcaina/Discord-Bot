@@ -2,6 +2,7 @@ import discord
 from support import *
 from discord.ext import commands
 import asyncio
+import json
 
 class Help(commands.Cog):
     def __init__(self,bot):
@@ -169,7 +170,7 @@ class Help(commands.Cog):
     @commands.command(aliases=["Leaderboard","lb"])
     async def leaderboard(self, ctx, choice=None):
         if choice == "server":
-            users = read()
+            users = json.load(open("cogs/eco.json","r"))
             leaderboard = {}
             rank = []
 
@@ -200,7 +201,7 @@ class Help(commands.Cog):
             await ctx.send(embed = embed)
         
         elif choice == "global":
-            users = read()
+            users = json.load(open("cogs/eco.json","r"))
             leaderboard = {}
             rank = []
 

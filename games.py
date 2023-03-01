@@ -29,13 +29,13 @@ async def play_roll(ctx,guess,amount,user_eco):
     await message.edit(embed=embed)
 
     if numb == 6 and (guess == "<7" or guess == "l"):
-        write(user_eco)
+        update_eco(user_eco)
         embed.title="Game!"
         embed.description=f"{EMOJI_ID[numb]}\nThere is no possible two die combinations\nto get less than 7!\nUnlucky, You lost ${amount}! L."
         await message.edit(embed=embed)
         return
     if numb == 1 and (guess == ">7" or guess == "g"):
-        write(user_eco)
+        update_eco(user_eco)
         embed.title="Game!"
         embed.description=f"{EMOJI_ID[numb]}\nThere is no possible two die combinations\nto get greater than 7!\nUnlucky, You lost ${amount}! L."
         await message.edit(embed=embed)
@@ -52,27 +52,27 @@ async def play_roll(ctx,guess,amount,user_eco):
 
         if (guess == "=7" or guess == "e") and (numb+numb2==7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*5
-            write(user_eco)
+            update_eco(user_eco)
             embed.title="Game!"
             embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*5}!"
             await message.edit(embed=embed)
             return
         elif (guess == ">7" or guess == "g") and (numb+numb2>7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*3
-            write(user_eco)
+            update_eco(user_eco)
             embed.title="Game!"
             embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
         elif (guess == "<7" or guess == "l") and (numb+numb2<7):
             user_eco[str(ctx.author.id)]["Balance"] += amount*3
-            write(user_eco)
+            update_eco(user_eco)
             embed.title="Game!"
             embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You won ${amount*3}!"
             await message.edit(embed=embed)
             return
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.title="Game!"
             embed.description=f"{EMOJI_ID[numb]} {EMOJI_ID[numb2]}\n\n You lost ${amount}! Take the L."
             await message.edit(embed=embed)
@@ -81,11 +81,11 @@ async def play_roll(ctx,guess,amount,user_eco):
 async def play_cf(ctx,choice,numb,amount,user_eco):
     if (choice == "tails" and numb == 1) or (choice == "heads" and numb == 2):
         user_eco[str(ctx.author.id)]["Balance"] += amount*2
-        write(user_eco)
+        update_eco(user_eco)
         await ctx.send(f"You won {amount*2} :dollar:!")
         return
     else:
-        write(user_eco)
+        update_eco(user_eco)
         await ctx.send(f"You lost ${amount}. Trash")
         return
 
@@ -173,18 +173,18 @@ async def play_slots(ctx,amount,user_eco):
     
     elif (slot1 == slot2 == slot3) or (slot4 == slot5 == slot6) or (slot7 == slot8 == slot9) or (slot1 == slot4 == slot7) or (slot2 == slot5 == slot8) or (slot3 == slot6 == slot9) or (slot1 == slot5 == slot9) or (slot3 == slot5 == slot7):
         user_eco[str(ctx.author.id)]["Balance"] += amount*3
-        write(user_eco)
+        update_eco(user_eco)
         await ctx.send(embed = won)
         return
 
     elif (slot1 == slot2) or (slot2 == slot3) or (slot4 == slot5) or (slot5 == slot6) or (slot7 == slot8) or (slot8 == slot9) or (slot1 == slot4) or (slot4 == slot7) or (slot2 == slot5) or (slot5 == slot8) or (slot3 == slot6) or (slot6 == slot9): 
         user_eco[str(ctx.author.id)]["Balance"] += amount*2
-        write(user_eco)
+        update_eco(user_eco)
         await ctx.send(embed = mid)
         return
 
     else:
-        write(user_eco)
+        update_eco(user_eco)
         await ctx.send(embed = lost)
         return
 
@@ -248,11 +248,11 @@ async def play_race(ctx,racer,amount,user_eco):
 
         if racer == "horse":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐎 **Won!**\n\nYou gained: ${amount*10}!'
             await message.edit(embed=embed)
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐎 **Won!**\n\nYou lost: ${amount}!'
             await message.edit(embed=embed)
 
@@ -263,11 +263,11 @@ async def play_race(ctx,racer,amount,user_eco):
 
         if racer == "dragon":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐉 **Won!**\n\nYou gained: ${amount*10}!'
             await message.edit(embed=embed)
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐉 **Won!**\n\nYou lost: ${amount}!'
             await message.edit(embed=embed)
 
@@ -278,11 +278,11 @@ async def play_race(ctx,racer,amount,user_eco):
         
         if racer == "trex":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🦖 **Won!**\n\nYou gained: ${amount*10}!'
             await message.edit(embed=embed)
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🦖 **Won!**\n\nYou lost: ${amount}!'
             await message.edit(embed=embed)
 
@@ -293,11 +293,11 @@ async def play_race(ctx,racer,amount,user_eco):
         
         if racer == "snail":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐌 **Won!**\n\nYou gained: ${amount*10}!'
             await message.edit(embed=embed)
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐌 **Won!**\n\nYou lost: ${amount}!'
             await message.edit(embed=embed)
 
@@ -308,10 +308,10 @@ async def play_race(ctx,racer,amount,user_eco):
 
         if racer == "tiger":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐅 **Won!**\n\nYou gained: ${amount*10}!'
             await message.edit(embed=embed)
         else:
-            write(user_eco)
+            update_eco(user_eco)
             embed.description = f'{the_race}\n\n🐅 **Won!**\n\nYou lost: ${amount}!'
             await message.edit(embed=embed)

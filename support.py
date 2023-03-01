@@ -1,15 +1,16 @@
 import json
 import discord
 
-def read():
-    return json.load(open("cogs/eco.json","r"))    
-
-def write(user_eco):
+def update_eco(user_eco):
     with open("cogs/eco.json","w") as f:
         json.dump(user_eco,f,indent=4)
 
+def update_bag(user_bag):
+    with open("cogs/inventory.json","w") as f:
+        json.dump(user_bag,f,indent=4)
+
 def open_account(user):
-    user_eco = read()
+    user_eco = json.load(open("cogs/eco.json","r"))
 
     if str(user) not in user_eco:
         user_eco[str(user)] = {}
@@ -17,9 +18,22 @@ def open_account(user):
         user_eco[str(user)]["Vault"] = 0
         user_eco[str(user)]["In Game"] = False
 
-        write(user_eco)
+        update_eco(user_eco)
 
     return user_eco
+
+def open_bag(user):
+    user_bag = json.load(open("cogs/inventory.json","r"))
+    print("openingbag inventory.json")
+
+    if str(user) not in user_bag:
+        user_bag[str(user)] = {}
+        user_bag[str(user)]["Fish"] = 0
+        user_bag[str(user)]["Wolf"] = 0
+
+        update_bag(user_bag)
+
+    return user_bag
 
 def multiHelp(pageNum=0,inline=False):
     helpGuide = json.load(open("help.json","r")) 

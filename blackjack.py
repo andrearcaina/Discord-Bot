@@ -96,7 +96,7 @@ class Blackjack():
     async def T(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["Balance"] += amount
         user_eco[str(ctx.author.id)]["In Game"] = False
-        write(user_eco)
+        update_eco(user_eco)
         dd.remove("<:facedown:1076126049743675533>")
         pd = " ".join(self.pd)
         dd = " ".join(self.dd)
@@ -107,7 +107,7 @@ class Blackjack():
     async def B(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["Balance"] += amount*3
         user_eco[str(ctx.author.id)]["In Game"] = False
-        write(user_eco)
+        update_eco(user_eco)
         dd.remove("<:facedown:1076126049743675533>")
         pd = " ".join(pd)
         dd = " ".join(dd)
@@ -117,7 +117,7 @@ class Blackjack():
 
     async def L(self,ctx,msg,embed,pd,dd,ptotal,dtotal,user_eco,amount):
         user_eco[str(ctx.author.id)]["In Game"] = False
-        write(user_eco)
+        update_eco(user_eco)
         dd.remove("<:facedown:1076126049743675533>")
         pd = " ".join(pd)
         dd = " ".join(dd)

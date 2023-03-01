@@ -61,7 +61,7 @@ class Play(discord.ui.View):
     @discord.ui.button(label="Double Down",style=discord.ButtonStyle.green,emoji="💵")
     async def btn2(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.ue[str(self.author.id)]["Balance"] -= self.a
-        write(self.ue)
+        update_eco(self.ue)
     
         if self.pH != 0:
             for i in self.pd:
@@ -149,7 +149,7 @@ class Play(discord.ui.View):
                 elif self.dT > 21:
                     self.ue[str(self.author.id)]["Balance"] += self.a*2
                     self.ue[str(self.author.id)]["In Game"] = False
-                    write(self.ue)
+                    update_eco(self.ue)
                     embed = await BJ.Blackjack().displayCards(self.pd,self.dd,self.pT,self.dT)
                     self.pd = " ".join(self.pd)
                     self.dd = " ".join(self.dd)
@@ -174,7 +174,7 @@ class Play(discord.ui.View):
         else:
             self.a = amt
             self.ue[str(self.author.id)]["In Game"] = False
-            write(self.ue)
+            update_eco(self.ue)
             embed = await BJ.Blackjack().displayCards(self.pd,self.dd,self.pT,self.dT)
             self.pd = " ".join(self.pd)
             self.dd = " ".join(self.dd)
@@ -189,7 +189,7 @@ class Play(discord.ui.View):
             self.a = amt
             self.ue[str(self.author.id)]["Balance"] += self.a*2
             self.ue[str(self.author.id)]["In Game"] = False
-            write(self.ue)
+            update_eco(self.ue)
             embed = await BJ.Blackjack().displayCards(self.pd,self.dd,self.pT,self.dT)
             self.pd = " ".join(self.pd)
             self.dd = " ".join(self.dd)
@@ -204,7 +204,7 @@ class Play(discord.ui.View):
             self.a = amt
             self.ue[str(self.author.id)]["Balance"] += self.a
             self.ue[str(self.author.id)]["In Game"] = False
-            write(self.ue)
+            update_eco(self.ue)
             embed = await BJ.Blackjack().displayCards(self.pd,self.dd,self.pT,self.dT)
             self.pd = " ".join(self.pd)
             self.dd = " ".join(self.dd)
