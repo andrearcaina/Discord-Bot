@@ -25,7 +25,7 @@ class Inventory(commands.Cog):
         embed.add_field(name="Fish:",value=f"{user_bag[str(member.id)]['Fish']}",inline=True)
         embed.add_field(name="Wolf:",value=f"{user_bag[str(member.id)]['Wolf']}",inline=True)
         embed.set_footer(text="Want to increase balance? go gamble or beg FOOL!",icon_url=None)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed)        
 
 async def setup(bot):
     await bot.add_cog(Inventory(bot))

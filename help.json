@@ -22,8 +22,13 @@
     },
     ":watermelon: Life Commands :watermelon:" : {
         "Beg :coin:" : "Beg for money in Toronto!",
-        "Rob :ninja:" : "Rob a store for a chance of money!",
+        "Rob :ninja:" : "Rob a store for a chance of money!\n(maybe even other people's vaults)",
         "Steal :atm:" : "Be a sneaky member and steal from\nother members in the server!",
         "Work :briefcase:" : "Work for 8 hours straight (no lunch breaks)\nand get paid minimum wage!"
+    },
+    ":hut: Stash Commands :hut:" : {
+        "Bunker :bomb:" : "Display your secret stash!",
+        "Build :tools:" : "Build a bunker, for the right price...",
+        "Move :moneybag:" : "vault -> stash. whatever that means..."
     }
 }

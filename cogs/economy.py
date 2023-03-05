@@ -175,41 +175,26 @@ class Economy(commands.Cog):
 
     @commands.cooldown(1,600,commands.BucketType.user)
     @commands.command(aliases=["r","Rob"])
-    async def rob(self,ctx):
-        user_eco = open_account(ctx.author.id)
+    async def rob(self,ctx,member:discord.Member=None):
+        if member is None:
+            user_eco = open_account(ctx.author.id)
 
-        cur_bal = user_eco[str(ctx.author.id)]["Balance"]
-        amount = randint(200,3000)
-        chance = randint(1,20)
+            cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+            amount = randint(200,3000)
+            chance = randint(1,20)
 
-        if cur_bal<=100:
-            await ctx.send("Not worth risking your money!")
-            return
+            return await do_rob(ctx,ctx.author.id,None,user_eco,cur_bal,0,chance,amount)
+        
+        elif member is not None:
+            user_eco = open_account(ctx.author.id)
 
-        if cur_bal > 100 and chance <= 15: #75% chance
-            new_bal = cur_bal - 500
-            embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
-            embed.add_field(name="Money lost:",value="$500",inline=False)
-            embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-            embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
-            
-            await ctx.send(embed=embed)
+            cur_bal = user_eco[str(ctx.author.id)]["Balance"]
+            member_vault = user_eco[str(member.id)]["Vault"]
+            amount = randint(10000,50000)
+            chance = randint(1,20)
+           
+            return await do_rob(ctx,ctx.author.id,member.id,user_eco,cur_bal,member_vault,chance,amount)
 
-            user_eco[str(ctx.author.id)]["Balance"] -= 500
-
-            update_eco(user_eco)
-        else:
-            new_bal = cur_bal + amount
-            embed = discord.Embed(title="YOU Sneaky bastard!",description="sheesh. bro got out :ninja::money_with_wings:",color=discord.Colour.green())
-            embed.add_field(name="Money gained:",value=f"${amount}",inline=False)
-            embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-            embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
-            
-            await ctx.send(embed=embed)
-
-            user_eco[str(ctx.author.id)]["Balance"] += amount
-
-            update_eco(user_eco)
 
     @commands.command(aliases=["withdraw","wi","with","wd"])
     async def Withdraw(self,ctx,amount=None):
@@ -280,6 +265,50 @@ class Economy(commands.Cog):
         update_eco(user_eco)
 
         await ctx.send(f"You have deposited {amount} dollars to your vault!")
+
+async def do_rob(ctx,author,member,user_eco,cur_bal,member_bal,chance,amount):
+    if cur_bal<=100:
+        await ctx.send("Not worth risking your money!")
+        return
+
+    elif member_bal >= 10000 and chance <= 15:
+        new_bal = cur_bal - 500
+        embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
+        embed.add_field(name="Money lost:",value="$500",inline=False)
+        embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
+        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        
+        await ctx.send(embed=embed)
+
+        user_eco[str(author)]["Balance"] -= 500
+
+        update_eco(user_eco)
+
+    elif cur_bal > 100 and chance <= 15 and member_bal == 0: #75% chance
+        new_bal = cur_bal - 500
+        embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
+        embed.add_field(name="Money lost:",value="$500",inline=False)
+        embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
+        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        
+        await ctx.send(embed=embed)
+
+        user_eco[str(author)]["Balance"] -= 500
+
+        update_eco(user_eco)
+    else:
+        new_bal = cur_bal + amount
+        embed = discord.Embed(title="YOU Sneaky bastard!",description="sheesh. bro got out :ninja::money_with_wings:",color=discord.Colour.green())
+        embed.add_field(name="Money gained:",value=f"${amount}",inline=False)
+        embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
+        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        
+        await ctx.send(embed=embed)
+
+        user_eco[str(author)]["Balance"] += amount
+        if member_bal >= 10000:
+            user_eco[str(member)]["Vault"] -= amount
+        update_eco(user_eco)
 
 async def setup(bot):
     await bot.add_cog(Economy(bot))

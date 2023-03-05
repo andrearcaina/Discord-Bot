@@ -31,12 +31,12 @@ class Help(commands.Cog):
                 try:
                     reaction, user = await self.bot.wait_for("reaction_add", timeout=60, check=check)
                     
-                    if str(reaction.emoji) == buttons[3] and currentPage != 4:
-                        currentPage = 4
+                    if str(reaction.emoji) == buttons[3] and currentPage != 5:
+                        currentPage = 5
                         await msg.edit(embed=multiHelp(currentPage))
                         await msg.remove_reaction(reaction, user)
                     
-                    elif str(reaction.emoji) == buttons[2] and currentPage != 4:
+                    elif str(reaction.emoji) == buttons[2] and currentPage != 5:
                         currentPage += 1
                         await msg.edit(embed=multiHelp(currentPage))
                         await msg.remove_reaction(reaction, user)
@@ -133,7 +133,7 @@ class Help(commands.Cog):
 
             elif choice == "rob":
                 embed = discord.Embed(title="Rob :ninja:",
-                                    description="Type !rob to rob money!",
+                                    description="Type !rob to rob money! Maybe even rob \nother server members...",
                                     color=discord.Colour.random())
                 embed.set_footer(text=f"75% to 25% chance ... ",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)

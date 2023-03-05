@@ -17,6 +17,8 @@ def open_account(user):
         user_eco[str(user)]["Balance"] = 100
         user_eco[str(user)]["Vault"] = 0
         user_eco[str(user)]["In Game"] = False
+        user_eco[str(user)]["Shelter"] = False
+        user_eco[str(user)]["Bunker"] = 0
 
         update_eco(user_eco)
 
