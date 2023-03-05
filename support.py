@@ -24,9 +24,8 @@ def open_account(user):
 
     return user_eco
 
-def open_bag(user):
+def open_bag(user): # need to finish this
     user_bag = json.load(open("cogs/inventory.json","r"))
-    print("openingbag inventory.json")
 
     if str(user) not in user_bag:
         user_bag[str(user)] = {}

@@ -14,7 +14,7 @@ def run_bot(TOKEN,econ_bot):
     @econ_bot.event
     async def on_ready():
         await econ_bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name='the stock market | !help'))
-        print(f'{econ_bot.user} running')
+        print(f'{econ_bot.user} is now running')
 
     @econ_bot.event
     async def on_message(message):
@@ -42,7 +42,7 @@ def run_bot(TOKEN,econ_bot):
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
                 await econ_bot.load_extension(f"cogs.{filename[:-3]}")
-                print(f"{filename[:-3]} is loaded")
+                print(f"{filename[:-3]} is loading...")
 
     async def main():
         async with econ_bot:

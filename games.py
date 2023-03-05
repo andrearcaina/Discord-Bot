@@ -138,8 +138,6 @@ async def play_slots(ctx,amount,user_eco):
     slot8 = slots[randint(0,30)]
     slot9 = slots[randint(0,30)]
 
-    print(slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9)
-
     slotOutput1 = '| :{}: | :{}: | :{}: |\n'.format(slot1,slot2,slot3)
     slotOutput2 = '| :{}: | :{}: | :{}: |\n'.format(slot4,slot5,slot6)
     slotOutput3 = '| :{}: | :{}: | :{}: |\n'.format(slot7,slot8,slot9)
@@ -192,7 +190,7 @@ async def play_race(ctx,racer,amount,user_eco):
     '''
     main idea
 
-    🐎 - horse :racehorse
+    🐎 - horse :racehorse:
     🐉 - dragon :dragon:
     🦖 - t rex :t_rex:
     🐌 - snail :snail:
@@ -227,24 +225,15 @@ async def play_race(ctx,racer,amount,user_eco):
 
     embed.title = "OFF THEY GO!"
     while max(len(animal) for animal in animals) <= 10:
-        select = choice(range(len(animals)))
+        select = choice(range(4))
         animals[select] = '=' + animals[select]
         the_race = "\n".join(animals)
         embed.description = f'{the_race}'
         await message.edit(embed=embed)
-        time.sleep(0.1)
-
-    print('race done')
-    print(len(animals[0]))
-    print(len(animals[1]))
-    print(len(animals[2]))
-    print(len(animals[3]))
-    print(len(animals[4]))
 
     if len(animals[0]) == 11:
         embed.description = f'{the_race}\n\n🐎 **Won!**'
         await message.edit(embed=embed)
-        print("horse")
 
         if racer == "horse":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
@@ -259,7 +248,6 @@ async def play_race(ctx,racer,amount,user_eco):
     elif len(animals[1]) == 11:
         embed.description = f'{the_race}\n\n🐉 **Won!**'
         await message.edit(embed=embed)
-        print("dragon")
 
         if racer == "dragon":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
@@ -274,7 +262,6 @@ async def play_race(ctx,racer,amount,user_eco):
     elif len(animals[2]) == 11:
         embed.description = f'{the_race}\n\n🦖 **Won!**'
         await message.edit(embed=embed)
-        print("trex")
         
         if racer == "trex":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
@@ -289,7 +276,6 @@ async def play_race(ctx,racer,amount,user_eco):
     elif len(animals[3]) == 11:
         embed.description = f'{the_race}\n\n🐌 **Won!**'
         await message.edit(embed=embed)
-        print("snail")
         
         if racer == "snail":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
@@ -304,7 +290,6 @@ async def play_race(ctx,racer,amount,user_eco):
     elif len(animals[4]) == 11:
         embed.description = f'{the_race}\n\n🐅 **Won!**'
         await message.edit(embed=embed)
-        print("tiger")
 
         if racer == "tiger":
             user_eco[str(ctx.author.id)]["Balance"] += amount*10
