@@ -41,9 +41,9 @@ class Bunker(commands.Cog):
         else:
             return await ctx.send(":thinking:")
     
-    @commands.command(aliases=["put", "Move","transfer"])
+    @commands.command(aliases=["put", "Move","transfer","mo"])
     async def move(self,ctx,choice=None,amount=None):
-        if choice == "in":
+        if choice == "in" or choice == "de" or choice == "deposit":
             user_eco = open_account(ctx.author.id)
 
             cur_vault = user_eco[str(ctx.author.id)]["Vault"]
@@ -76,7 +76,7 @@ class Bunker(commands.Cog):
             update_eco(user_eco)
 
             await ctx.send(f"You have stashed {amount} dollars to your bunker!")
-        elif choice == "out":
+        elif choice == "out" or choice == "wi" or choice == "withdraw":
             user_eco = open_account(ctx.author.id)
 
             cur_bunk = user_eco[str(ctx.author.id)]["Bunker"] 
@@ -87,7 +87,7 @@ class Bunker(commands.Cog):
 
                 update_eco(user_eco)
 
-                await ctx.send(f"You have withdrawed {cur_bunk} dollars from your vault!")
+                await ctx.send(f"You have withdrawed {cur_bunk} dollars from your stash!")
                 return
 
             if amount is None or amount == 0 or (amount == "all" and cur_bunk == 0):
@@ -97,7 +97,7 @@ class Bunker(commands.Cog):
             amount = int(amount)
 
             if amount>cur_bunk:
-                await ctx.send("You don't have that much money!")
+                await ctx.send("You don't have that much money in your stash!")
                 return
             if amount<0:
                 await ctx.send("Amount must be positive!")

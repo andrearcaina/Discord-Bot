@@ -159,6 +159,27 @@ class Help(commands.Cog):
                 embed.set_footer(text=f"Make sure you mention the user and\nreplace 'discordmember' with their username.",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)
 
+            elif choice == "bunker":
+                embed = discord.Embed(title="Bunker :bomb:",
+                                    description="Type !bunker to check your stash.\n\nex: !bunker",
+                                    color=discord.Colour.random())
+                embed.set_footer(text=f"!bunk or !stash can be used instead",icon_url=ctx.author.avatar)
+                await ctx.send(embed=embed)
+
+            elif choice == "build":
+                embed = discord.Embed(title="build :tools:",
+                                    description="buildabunker for 5 mil",
+                                    color=discord.Colour.random())
+                embed.set_footer(text=f"shhh...",icon_url=ctx.author.avatar)
+                await ctx.send(embed=embed)
+
+            elif choice == "move":
+                embed = discord.Embed(title="move :moneybag:",
+                                    description="Type !move [choice] [amount] where\nchoice = in, de, wi or out\namount = amount to deposit/withdraw\n\nex: !steal @psykthe",
+                                    color=discord.Colour.random())
+                embed.set_footer(text=f"!transfer or !mo can be used instead",icon_url=ctx.author.avatar)
+                await ctx.send(embed=embed)
+
             else:
                 await ctx.send("That's not a command!")
                 return
