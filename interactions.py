@@ -55,6 +55,7 @@ class Play(discord.ui.View):
             self.dd = " ".join(self.dd[0:2])
             embed = discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",
                                   description=f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dV}\n\nYour Bet: {self.a}\nInsurance: {self.added_bet}")
+            embed.set_footer(icon_url=self.author.avatar)
             await interaction.response.edit_message(embed=embed,view=view)
 
     #double down button
@@ -107,6 +108,7 @@ class Play(discord.ui.View):
         self.dd = " ".join(self.dd[0:2])
         embed = discord.Embed(title="Dealer: 'Lets Play Some Blackjack!'",
                               description=f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dV}\n\nYour Bet: {self.a}\nInsurance: {self.added_bet}")
+        embed.set_footer(icon_url=self.author.avatar)
         await interaction.response.edit_message(embed=embed,view=view)
 
     #hit lose win
@@ -143,7 +145,7 @@ class Play(discord.ui.View):
                 self.dd.append(d_new_card)
                 self.dT += dhitValue
                 
-                if 17 < self.dT < 21:
+                if 17 < self.dT <= 21:
                     break 
                 
                 elif self.dT > 21:
@@ -155,6 +157,7 @@ class Play(discord.ui.View):
                     self.dd = " ".join(self.dd)
                     embed.title="Dealer: 'Congrats. mhm.'"
                     embed.description = f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dT}\n\nYou Won.\nYou gained: ${self.a*2}!"
+                    embed.set_footer(icon_url=self.author.avatar)
                     return await interaction.response.edit_message(embed=embed,view=None)
 
             #let x = self.dT => if xE(17,21), then run below
@@ -180,6 +183,7 @@ class Play(discord.ui.View):
             self.dd = " ".join(self.dd)
             embed.title="Dealer: 'Take L.'"
             embed.description = f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dT}\n\nYou LOST!\nSome unfortunate news! You lost: ${self.a}!"
+            embed.set_footer(icon_url=self.author.avatar)
             return await interaction.response.edit_message(embed=embed,view=None)
 
     async def W(self,interaction: discord.Interaction,amt,insurance):
@@ -195,6 +199,7 @@ class Play(discord.ui.View):
             self.dd = " ".join(self.dd)
             embed.title="Dealer: 'Congrats, I guess.'"
             embed.description = f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dT}\n\nYou won: ${self.a*2}!"
+            embed.set_footer(icon_url=self.author.avatar)
             return await interaction.response.edit_message(embed=embed,view=None)
     
     async def T(self, interaction: discord.Interaction,amt,insurance):
@@ -210,4 +215,5 @@ class Play(discord.ui.View):
             self.dd = " ".join(self.dd)
             embed.title="Dealer: 'Wow. Not Bad.'"
             embed.description = f"Your Hand: {self.pd} Total value: {self.pT}\n\nDealer Hand: {self.dd} Total value: {self.dT}\n\nYou Tied with the Dealer!\n\nYou got your money back!"
+            embed.set_footer(icon_url=self.author.avatar)
             return await interaction.response.edit_message(embed=embed,view=None)

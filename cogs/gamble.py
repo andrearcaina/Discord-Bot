@@ -161,7 +161,7 @@ class Gamble(commands.Cog):
         cur_bal = user_eco[str(ctx.author.id)]["Balance"]
         playing = user_eco[str(ctx.author.id)]["In Game"]
 
-        if(playing):
+        if playing:
             await ctx.send("You're already in a game!")
             return
  

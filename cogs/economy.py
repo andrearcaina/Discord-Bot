@@ -92,7 +92,7 @@ class Economy(commands.Cog):
 
             user_eco[str(ctx.author.id)]["Balance"] = 0
 
-        if 20 <= cur_bal <= 50:
+        elif 20 <= cur_bal <= 50:
             gang = ":ninja:"*3
             embed = discord.Embed(title="Oh no! you've been robbed!",description=f"A group of robbers saw an opportunity, and well, boom! {gang} UNLUCKY",color=discord.Colour.red())
             embed.add_field(name="Money lost:",value=f"${abs(cur_bal)}",inline=False)
@@ -104,7 +104,7 @@ class Economy(commands.Cog):
 
             update_eco(user_eco)
 
-        if cur_bal > 50 and new_bal < cur_bal:
+        elif cur_bal > 50 and new_bal < cur_bal:
             gang = ":ninja:"*3
             embed = discord.Embed(title="Oh no! you've been robbed!",description=f"A group of robbers saw an opportunity, and well, boom! {gang} UNLUCKY",color=discord.Colour.red())
             embed.add_field(name="Money lost:",value=f"${abs(amount)}",inline=False)
@@ -152,7 +152,7 @@ class Economy(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.cooldown(1,3600,commands.BucketType.user)
+    @commands.cooldown(1,900,commands.BucketType.user)
     @commands.command(aliases=["s","st"])
     async def steal(self,ctx,member:discord.Member):
         user_eco = open_account(ctx.author.id)
