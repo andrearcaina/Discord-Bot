@@ -1,7 +1,6 @@
 import os
 import discord
 from discord.ext import commands
-from responses import respond
 import asyncio
 
 def run_bot(TOKEN,econ_bot):
@@ -20,34 +19,18 @@ def run_bot(TOKEN,econ_bot):
     @econ_bot.event
     async def on_message(message):
         print(f'{message.author} said: "{message.content}" ({message.channel})')
-        try:
-            if message.author == econ_bot.user:
-                return
-            
-            user_message = str(message.content).lower()
+        user_message = str(message.content).lower()
 
-            if '!' in user_message: #for blackjack
-                if user_message in ['!join','!leave','!hit','!stand']:
-                    await message.delete()
-                else:
-                    await econ_bot.process_commands(message)
-
-            elif '!' not in user_message: 
-                for i in range(len(['map','where','idiot','bozo','broke'])):
-                    if ['map','where','idiot','bozo','broke'][i] in user_message:
-                        with open('map.png', 'rb') as f:
-                            picture = discord.File(f)
-                            await message.channel.send(file=picture)
-                            return
-
-                else:
-                    rsp = respond(user_message,message.author)
-                    await message.reply(rsp)
-                    
-            else:
-                await econ_bot.process_commands(message)
-        except:
-            print("not recognized bot response/command")
+        if '!' not in user_message: 
+            for i in range(len(['map','where','idiot','bozo','broke'])):
+                if ['map','where','idiot','bozo','broke'][i] in user_message:
+                    with open('map.png', 'rb') as f:
+                        picture = discord.File(f)
+                        await message.channel.send(file=picture)
+                        return
+                
+        else:
+            await econ_bot.process_commands(message)
 
     @econ_bot.event
     async def on_command_error(ctx,error):

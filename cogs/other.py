@@ -167,7 +167,7 @@ class Help(commands.Cog):
                 await ctx.send(embed=embed)
 
             elif choice == "build":
-                embed = discord.Embed(title="build :tools:",
+                embed = discord.Embed(title="Build :tools:",
                                     description="buildabunker for 5 mil",
                                     color=discord.Colour.random())
                 embed.set_footer(text=f"shhh...",icon_url=ctx.author.avatar)
