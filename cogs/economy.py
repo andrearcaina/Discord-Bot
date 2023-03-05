@@ -173,7 +173,7 @@ class Economy(commands.Cog):
         await ctx.send(f"You stole ${stolen} from {member}!")
 
 
-    @commands.cooldown(1,600,commands.BucketType.user)
+    @commands.cooldown(1,900,commands.BucketType.user)
     @commands.command(aliases=["r","Rob"])
     async def rob(self,ctx,member:discord.Member=None):
         if member is None:
@@ -270,13 +270,13 @@ async def do_rob(ctx,author,member,user_eco,cur_bal,member_bal,chance,amount):
     if cur_bal<=100:
         await ctx.send("Not worth risking your money!")
         return
-
+    
     elif member_bal >= 10000 and chance <= 15:
         new_bal = cur_bal - 500
         embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
         embed.add_field(name="Money lost:",value="$500",inline=False)
         embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        embed.set_footer(text="Want to commit more crime? wait 15 minutes to run this command again! (or try others)",icon_url=None)
         
         await ctx.send(embed=embed)
 
@@ -289,7 +289,7 @@ async def do_rob(ctx,author,member,user_eco,cur_bal,member_bal,chance,amount):
         embed = discord.Embed(title="YOU GOT CAUGHT!",description="Fortunately for you, they let you off with a small fine. :police_officer::oncoming_police_car:",color=discord.Colour.red())
         embed.add_field(name="Money lost:",value="$500",inline=False)
         embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        embed.set_footer(text="Want to commit more crime? wait 15 minutes to run this command again! (or try others)",icon_url=None)
         
         await ctx.send(embed=embed)
 
@@ -301,12 +301,12 @@ async def do_rob(ctx,author,member,user_eco,cur_bal,member_bal,chance,amount):
         embed = discord.Embed(title="YOU Sneaky bastard!",description="sheesh. bro got out :ninja::money_with_wings:",color=discord.Colour.green())
         embed.add_field(name="Money gained:",value=f"${amount}",inline=False)
         embed.add_field(name="New Balance:",value=f"${new_bal}",inline=False)
-        embed.set_footer(text="Want to commit more crime? wait 10 minutes to run this command again! (or try others)",icon_url=None)
+        embed.set_footer(text="Want to commit more crime? wait 15 minutes to run this command again! (or try others)",icon_url=None)
         
         await ctx.send(embed=embed)
 
         user_eco[str(author)]["Balance"] += amount
-        if member_bal >= 10000:
+        if member_bal >= 10000 and member is not None:
             user_eco[str(member)]["Vault"] -= amount
         update_eco(user_eco)
 

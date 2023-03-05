@@ -178,7 +178,7 @@ class Help(commands.Cog):
 
             for user in users:
                 name = int(user)
-                balance = users[str(user)]["Balance"] + users[str(user)]["Vault"]
+                balance = users[str(user)]["Balance"] + users[str(user)]["Vault"] + users[str(user)]["Bunker"] 
                 if guild.get_member(name) is not None:
                     leaderboard[balance] = name
                     rank.append(balance)
@@ -207,7 +207,7 @@ class Help(commands.Cog):
 
             for user in users:
                 name = int(user)
-                balance = users[str(user)]["Balance"] + users[str(user)]["Vault"]
+                balance = users[str(user)]["Balance"] + users[str(user)]["Vault"] + users[str(user)]["Bunker"]
                 leaderboard[balance] = name
                 rank.append(balance)
 

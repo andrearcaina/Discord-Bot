@@ -40,6 +40,77 @@ class Bunker(commands.Cog):
 
         else:
             return await ctx.send(":thinking:")
+    
+    @commands.command(aliases=["put", "Move","transfer"])
+    async def move(self,ctx,choice=None,amount=None):
+        if choice == "in":
+            user_eco = open_account(ctx.author.id)
+
+            cur_vault = user_eco[str(ctx.author.id)]["Vault"]
+
+            if amount == "all" and cur_vault > 0:
+                user_eco[str(ctx.author.id)]["Vault"] -= cur_vault
+                user_eco[str(ctx.author.id)]["Bunker"] += cur_vault
+
+                update_eco(user_eco)
+
+                await ctx.send(f"You have stashed {cur_vault} dollars to your bunker!")
+                return
+            
+            if amount is None or amount == 0 or (amount == "all" and cur_vault == 0):
+                await ctx.send("Please enter an amount to send.")
+                return 
+
+            amount = int(amount)
+
+            if amount>cur_vault:
+                await ctx.send("You don't have that much money in your vault!")
+                return
+            if amount<0:
+                await ctx.send("Amount must be positive!")
+                return
+            
+            user_eco[str(ctx.author.id)]["Vault"] -= amount
+            user_eco[str(ctx.author.id)]["Bunker"] += amount
+
+            update_eco(user_eco)
+
+            await ctx.send(f"You have stashed {amount} dollars to your bunker!")
+        elif choice == "out":
+            user_eco = open_account(ctx.author.id)
+
+            cur_bunk = user_eco[str(ctx.author.id)]["Bunker"] 
+
+            if amount == "all" and cur_bunk > 0:
+                user_eco[str(ctx.author.id)]["Vault"] += cur_bunk
+                user_eco[str(ctx.author.id)]["Bunker"] -= cur_bunk
+
+                update_eco(user_eco)
+
+                await ctx.send(f"You have withdrawed {cur_bunk} dollars from your vault!")
+                return
+
+            if amount is None or amount == 0 or (amount == "all" and cur_bunk == 0):
+                await ctx.send("Please enter an amount to send.")
+                return 
+
+            amount = int(amount)
+
+            if amount>cur_bunk:
+                await ctx.send("You don't have that much money!")
+                return
+            if amount<0:
+                await ctx.send("Amount must be positive!")
+                return
+            
+            user_eco[str(ctx.author.id)]["Vault"] += amount
+            user_eco[str(ctx.author.id)]["Bunker"] -= amount
+
+            update_eco(user_eco)
+
+            await ctx.send(f"You have withdrawed {amount} dollars from your stash!")
+        else:
+            await ctx.send("Please choose 'in' or 'out' to move money\n in or out of your stash!")
 
 async def setup(bot):
     await bot.add_cog(Bunker(bot))
