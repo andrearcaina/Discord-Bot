@@ -175,7 +175,7 @@ class Help(commands.Cog):
 
             elif choice == "move":
                 embed = discord.Embed(title="move :moneybag:",
-                                    description="Type !move [choice] [amount] where\nchoice = in, de, wi or out\namount = amount to deposit/withdraw\n\nex: !steal @psykthe",
+                                    description="Type !move [choice] [amount] where\nchoice = in, de, wi or out\namount = amount to deposit/withdraw\n\nex: !move in all",
                                     color=discord.Colour.random())
                 embed.set_footer(text=f"!transfer or !mo can be used instead",icon_url=ctx.author.avatar)
                 await ctx.send(embed=embed)
