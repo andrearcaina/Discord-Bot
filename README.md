@@ -1,9 +1,6 @@
 # Discord-Bot
 ### Economy Bot
-* All purpose gambling bot!
-* Play blackjack! gamble your money away! 
-* Steal other members and rob stores!
-* W.I.P, made in python and uses discord api
-
-### Invite the bot to your server!
-* link: {soon}
+- All purpose gambling bot where the user can: 
+  - Play blackjack! gamble your money away! 
+  - Steal other members and rob stores!
+  - Made using python and Discord.py
