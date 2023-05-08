@@ -22,13 +22,17 @@ def run_bot(TOKEN,econ_bot):
         user_message = str(message.content).lower()
 
         if '!' not in user_message: 
-            for i in range(len(['map','where','idiot','bozo','broke'])):
+            for i in range(13):
                 if ['map','where','idiot','bozo','broke'][i] in user_message:
                     with open('map.png', 'rb') as f:
                         picture = discord.File(f)
                         await message.channel.send(file=picture)
                         return
-                
+                elif ['cgpa', 'gpa', 'cum', 'cumulative', 'grade', 'point', 'average'][i] in user_message:
+                    with open('cgpa.png', 'rb') as f:
+                        picture = discord.File(f)
+                        await message.channel.send(file=picture)
+                        return
         else:
             await econ_bot.process_commands(message)
 
