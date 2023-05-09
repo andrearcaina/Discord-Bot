@@ -90,3 +90,7 @@ EMOJI_ID =          [   "<a:animated_dice:1075250955077038150>",
                         "<:dice6:1075251118898159626>"
                     ]
 ```
+- you're good to go! run main.py
+
+or: 
+- invite the [bot](https://discord.com/api/oauth2/authorize?client_id=1072622197165793300&permissions=2183991392320&scope=bot)!
